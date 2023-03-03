@@ -162,6 +162,10 @@ some_name <- function(param1, param2=2) {
 
 ## Data matrices
 
+![](images/wellplate.jpeg){ height=500px }
+
+## Data matrices
+
 Much like vectors, matrices can only hold one data type (e.g. only numeric
 or only character or only logical etc.).
 
@@ -186,6 +190,20 @@ m[, 2] # vector which is the first column
 m[3, 1] # first element of the third row
 ```
 
+## One more thing about vectors: named indices
+
+Elements of a vector can be accessed not only using numbers (indices) or
+logical vectors. You can assign names to vectors:
+
+
+```{r eval=F,echo=T}
+person <- c("January", "Weiner", 134)
+names(person) <- c("FirstName", "LastName", "Age")
+person["FirstName"]
+person["Age"]
+```
+
+
 ## Row and column names
 
 We can name rows and columns of a matrix and use the names to access the
@@ -195,9 +213,11 @@ rows and columns:
 colnames(m) <- letters[1:ncol(m)]
 rownames(m) <- LETTERS[1:nrow(m)]
 
-m["A", "b"]
-m["B", ] # etc.
+m["A", "b"]  # one "cell"
+m["B", ]     # one row
+m[   , "b"]  # one column
 ```
+
 
 ## Remember
 
@@ -205,16 +225,63 @@ m["B", ] # etc.
  * If you select more than one row or column, you will get a (smaller) matrix
  * If you select more rows or columns than are present, you will get a
    "subscript out of bonds" error
+ * **REMEMBER:** Vectors and matrices **always** have only one data type
+   (string, integer etc.)
 
 ## Demonstration
 
 
-## Lists
+## Lists {.columns-2}
+
+![](images/clothesline.png){ height=400px }
 
  * Lists hold all types of information
  * Lists are really, really cool
  * Lists have elements. An element of a list can have *any* type, including
    another list.
+ * You create lists using `list()` function
+
+
+```{r echo=T,eval=F}
+person <- list(name="Weiner", 
+               Age=NA, 
+               given="January")
+```
+
+
+
+
+
+
+## Accessing lists {.columns-2}
+
+![](images/clothesline_1.png){ height=300px }
+
+To access an element of a list, you need to use double brackets `[[`
+
+
+```{r eval=FALSE,echo=T}
+person[["name"]]
+```
+
+There is a shortcut:
+
+```{r eval=FALSE,echo=T}
+person$name
+```
+
+## Accessing lists {.columns-2}
+
+![](images/clothesline_2.png){ height=300px }
+
+If you use single brackets `[`, you will get a piece of the "clothesline",
+that is, you will produce a smaller list.
+
+
+```{r eval=FALSE,echo=T}
+person["name"]
+class(person)
+```
 
 ## Lists
 
@@ -222,6 +289,8 @@ m["B", ] # etc.
 
  * You access elements of a list using `[[`, not `[`
  * Lists may have names (set with `names()`), but don't have to
+
+
 
 ## Data frames
 
