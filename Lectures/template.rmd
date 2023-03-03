@@ -1,0 +1,42 @@
+---
+title: "CUBI ioslides template"
+subtitle: "A subtitle"
+author: "January Weiner"
+date: "`r Sys.Date()`"
+output:
+  ioslides_presentation: 
+    widescreen: true
+    smaller: true
+    css: files/style.css
+    logo: files/logo_bihealth_en.png
+toc: no
+---
+
+```{r,echo=FALSE}
+## Set default options for the knitr RMD processing
+knitr::opts_chunk$set(echo=FALSE,warning=FALSE,message=FALSE,fig.width=5,fig.height=5,cache=FALSE,autodep=TRUE, results="hide")
+```
+
+```{r libraries,cache=FALSE}
+```
+
+
+## Simple slide
+
+Cubi colors:
+
+ * <span style="color:#AA1C7D;">#AA1C7D - Hot Pink</span>
+ * <span style="color:#70ACC0;">#70ACC0 - Glacier</span>
+
+## Slide with two columns
+
+<div class="columns-2">
+
+```{r}
+plot(1:10, bty="n")
+```
+
+This is a slide with two columns. Note that there is no division, one
+columns flows into the other.
+
+

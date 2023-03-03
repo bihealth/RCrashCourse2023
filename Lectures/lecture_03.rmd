@@ -1,0 +1,415 @@
+---
+title: "R crash course / 03"
+author: ""
+date: "`r Sys.Date()`"
+output:
+  ioslides_presentation: 
+    widescreen: true
+    smaller: true
+    css: files/style.css
+    logo: files/logo_bihealth_en.png
+---
+
+```{r,echo=FALSE}
+## Set default options for the knitr RMD processing
+knitr::opts_chunk$set(echo=TRUE,eval=FALSE,warning=FALSE,message=FALSE,fig.width=5,fig.height=5,cache=TRUE,autodep=TRUE, results="hide")
+```
+
+## Aims for today
+
+* Cleaning data
+* Regular expressions
+* Searching, sorting and selecting
+
+## Repetitorium of Day 2
+
+# Cleaning data
+## A short note on organizing your data
+
+ * If possible, use a specialized tool and not Excel (a database,
+   specialized clinical data management system, REDCap etc.)
+
+## And if you use Excel...
+
+ If you use Excel, follow these rules:
+
+   * NEVER modify original files
+   * Versionize your files
+   * Check data for consistency (e.g. with R!)
+   * Use preselected values 
+   * Add a meta-data sheet describing the fields
+   * do not color-code or format-code your information (e.g. denoting treatment in bold)
+   * Add comments in separate fields
+   * NEVER throw away or replace any identifiers, always keep the old identifiers
+   * understand what you describe (patients? samples? assays?)
+   * understand the difference between wide and long format
+
+## And if you use Excel and don't follow these rules
+
+  * brace yourself for bad times
+  * get used to nasty remarks
+
+## Diagnosing problems
+
+Potential problems:
+
+ * incorrect import (e.g. numeric values as strings)
+ * typos (e.g. "x15" instead of "15")
+ * incongruent labels (e.g. mixing "M", "male" and "männlich")
+ * mixing upper and lower case
+ * mixing different types of decimal separator
+ * special numeric values (e.g. "> 10", "< 5")
+ * comments in the same column ("10 (unreliable)")
+ * dates (also, Excel converts certain strings to dates)
+
+## Diagnosing problems
+
+ * tidyverse reading functions provide a summary on the reading process,
+   e.g.:
+
+
+```{r eval=TRUE,results="markdown"}
+library(tidyverse)
+myiris <- read_csv("../Datasets/iris.csv")
+```
+
+ * Use `summary`, `class` and `typeof` functions to find potential
+   problems. This is what we expect:
+
+
+```{r eval=TRUE,results="markdown"}
+typeof(myiris$Petal.Width)
+class(myiris$Petal.Width)
+summary(myiris$Petal.Width)
+```
+
+Longer explanation: `typeof` returns the so called "storage type", that is
+the very basic type of a value (string, logical, integer, list etc.).
+`class` can be different (more specific). For example, if `mtx` is a matrix
+of numbers, `typeof(mtx)` is `double`, and `class(mtx)` is `matrix`.
+
+## Diagnosing problems
+
+ * Use `summary`, `class` and `typeof` functions to find potential
+   problems. This is **not** what we expect:
+
+```{r eval=TRUE,results="markdown"}
+ typeof(myiris$`Sepal Length`)
+  class(myiris$`Sepal Length`)
+summary(myiris$`Sepal Length`)
+```
+
+(we use the back ticks because the column name contains a space)
+
+
+
+
+## Diagnosing problems
+
+ * The colorDF package provides a function called `summary_colorDF` which
+   can be used to diagnose problems with different flavors of data frames:
+
+
+
+
+
+```{r eval=TRUE,results="markdown",R.options=list(width=100)}
+library(colorDF)
+summary_colorDF(myiris)
+```
+
+## Mending problems
+
+ * find the incorrect values
+ * replace incorrect values (by search and replace)
+ * enforcing a particular data type (e.g., converting strings to numbers)
+
+
+## Substitutions (search & replace)
+
+ * `gsub(string1, string2, text)` substitute all occurences of `string1` in
+    by `string2` in `text`
+ * `sub(...)` same, but only the first occurence
+
+```{r}
+## Clearly broken!
+group <- c("ontrol", "Montrol", "Kontrol", "Kkkkkontrl", "hello Connnnnnntrol", "oh what a nice day it is, controooool", "control ", "Control, incoming")
+
+## replace upper-case "Control"
+group2 <- gsub("[ckCK]+on*tro*l$", "control", group)
+
+grepl("[ckCK]+on*tro*l$", group)
+
+group != group2
+
+## replace all spaces
+group <- gsub(" ", "", group)
+```
+
+Notes:
+
+The above operations are so common that there are "shortcut" functions
+defined in R:
+
+```{r}
+## get rid of the spaces
+trimws(group)
+
+## make everything lower case
+tolower(group)
+
+## make everything upper case
+toupper(group)
+```
+
+
+## Regular expressions
+
+Is there not a way to simplify things? 
+
+```{r}
+group <- c("Control", " control", "control ", "Control   ")
+
+# one method
+gsub(" ", "", group) # but what happens if the groups are "group 1", "group 2" etc?
+
+# substitute at the end of the string
+gsub(" $", "", group)
+
+# at the beginning
+gsub("^ ", "", group)
+
+# any number of occurences
+gsub(" *", "", group)
+```
+
+```{r}
+group <- c("Control", " control", "control ", "Control   ")
+group1 <- trimws(group)
+group2 <- tolower(group1)
+
+## sin(log(tan(pi)))
+group <- tolower(trimws(group))
+
+```
+
+
+
+## Regular expression cont.
+
+In regular expressions, some characters or strings have special meanings
+
+ * Some mean what is supposed to be replaced (e.g. `.`, dot,
+   means "any character")
+ * Some mean how many times something gets matched; e.g. `*` means "any
+   number of matches of the previous character, so `.*` means any character
+   any number of times (like, everything)
+ * Some characters at certain position may also have a special meaning
+   (like `^` means "match the beginning of a string" and `$` at the end of
+   a regular expression means "match at the end of a string").
+ * A string like `[abc]` will match only a, b and c, but not d. You can use
+   ranges, e.g. `[0-9]` or `[a-z]`
+
+## Regular expression cont.
+
+```{r}
+foo <- c("a1_123", "a1_231", "a2_17", "B2_23", "c2_889")
+
+# substitute digits only
+gsub("[0-9]*", "", foo)
+
+# substitute letters only
+gsub("[a-z]*", "", foo)
+
+# same, but case insensitive
+gsub("[a-z]*", "", foo, ignore.case=TRUE)
+
+# substitute everything after "_"
+# dot means "any character"
+gsub("_.*", "", foo)
+```
+
+## Regular expression cont.
+
+Note: the function `gsub` takes three arguments:
+
+ * a regular expression
+ * a replacement
+ * a character vector
+
+It then finds all occurences of the regular expression in each element of
+the character vector and replaces them by the replacement.
+
+## Typical example
+
+Often, due to typos, when you read a data file, a numeric column becomes a
+character string, because for example someone entered "x15" instead of "15"
+or mixed German and English decimal separators (e.g. "1,5" and "1.5" in the
+same column).
+
+We can use the `as.numeric` function to convert the strings to numeric
+values, but this does not work as intended:
+
+
+```{r eval=TRUE, results="markdown"}
+foo <- c("xxxxx15", "15.5", "15,5")
+as.numeric(foo)
+```
+
+We need to substitute the strings first:
+
+```{r eval=TRUE, results="markdown"}
+foo <- gsub("[a-zA-Z]*", "", foo) # remove letters
+foo <- gsub(",", ".", foo)        # convert decimal separator
+as.numeric(foo)
+```
+
+
+
+## Regexps cont.
+
+You can wrap gsub around another gsub
+
+```{r}
+vec <- c("mouse", " Mouse", "mus domesticus", "chicken", "Schicken", "Duck")
+vec <- gsub("S*chicken", "Chicken", gsub("^m.*", "Mouse", gsub("^ *", "", vec)))
+
+## same as
+
+vec <- gsub("^ *", "", vec)
+vec <- gsub("^m.*", "Mouse", vec)
+vec <- gsub("S*chicken", "Chicken", vec)
+```
+
+## Exercise 3.1
+
+
+ * What regular expression matches all of the ankyrin repeat genes (but not other genes) in the following vector: `c("ANKRD22", "ANKEN", "ank.rep.domain 12", "ifng-1", "ANKRD-33", "  ankrd23", "MAPK)`
+ * Use gsub in the above vector to replace all occurences of "ANKRD"   
+ * Use gsub to make the following uniform: `c("male", "Male ", "M", "F", "female", " Female")`
+ * Using `gsub` and the `toupper` function, clean up the gene names such
+   that they conform to the HGNC (all capital
+   letters, no spaces, no dashes): `c("ankrd22", "ifng", "Nf-kb", " Cxcl 5", "CCL 6.", "ANK.r.d. 12")`
+
+
+## Using regular expressions to clean tables 
+
+
+## Exercise 3.2
+
+ * Read the data file `iris.csv` using the `read_csv` function. Spot and correct errors.
+ * Read the data file `meta_data_botched.xlsx`. Spot and correct errors.
+
+## Writing data
+
+Main data types you will encounter:
+
+---------------------------- ------------------------------- ------------------------------- --------------------------
+Data type                    Function                        Package                         Notes
+---------------------------- ------------------------------- ------------------------------- --------------------------
+TSV / TAB separated values   `write.table()`                 `base R`                        Tab is `\t`.
+                                                                                             A very general and 
+                                                                                             customizable function
+                                                                                             Warning:
+                                                                                             column names 
+
+                             `write_tsv()`                   `readr`                         No rownames!
+
+                                                                                             
+CSV / comma separated        `write.csv()`                   `base R`                        a wrapper around
+                                                                                             `write.table()`
+                                                                                             
+                             `write_csv()`                   `readr`                         No rownames!
+
+XLS (old Excel)                                                                              Just don't use it. No, 
+                                                                                             seriously, don't.
+                                                                                             
+XLSX (new Excel)             `write_xlsx()`                  `writexl`                       Warning:
+                                                                                             row names
+                                                                                             omitted!
+---------------------------- ------------------------------- ------------------------------- --------------------------
+
+
+## Row names – gory details.
+
+The default base R functions `read.*` assign (unless otherwise specified)
+row names to a data frame.
+
+The tidyverse `read_*` family of functions return not a data frame, but its
+variant, a *tibble*. These tibbles behave very much like data frame;
+however, **tidyverse discourages the use of row names** and sometimes even
+removes existing row names on data frames.
+
+## Wide and Long format (demonstration)
+
+
+## Wide and Long format
+
+ Long advantages:
+
+  * easier to filter, process, visualize, do statistics with
+  * focused on measurement ("patient ID" or equivalent is a covariate, and so is measurement type)
+ 
+ Wide advantages:
+
+  * groups data by a covariate ("patient ID")
+  * can be easier to manage (each column one measurement type)
+
+
+
+## Converting from wide to long:
+
+```{r}
+wide <- read.table(header=TRUE, text='
+ subject sex control cond1 cond2
+       1   M     7.9  12.3  10.7
+       2   F     6.3  10.6  11.1
+       3   F     9.5  13.1  13.8
+       4   M    11.5  13.4  12.9
+')
+pivot_longer(wide, cols=c("control", "cond1", "cond2"), 
+  names_to="condition", values_to="measurement")
+```
+
+
+
+## Converting from long to wide
+
+```{r}
+long <- read.table(header=TRUE, text='
+ subject  sampleID sex condition measurement
+       1  ID000001 M   control         7.9
+       1  ID000002 M     cond1        12.3
+       1  ID000003 M     cond2        10.7
+       2  ID000004 F   control         6.3
+       2  ID000005 F     cond1        10.6
+       2  ID000006 F     cond2        11.1
+       3  ID000007 F   control         9.5
+       3  ID000008 F     cond1        13.1
+       3  ID000009 F     cond2        13.8
+')
+```
+
+## Converting from long to wide
+
+```{r}
+## not what we wanted!!! Why?
+pivot_wider(long, names_from="condition", values_from="measurement")
+
+## Instead: 
+pivot_wider(long, id_cols="subject", names_from="condition", values_from="measurement")
+```
+
+## Exercise 3.3
+
+Convert the following files to long format:
+
+ * `iris.tsv`
+ * `labresults_wide.csv`
+ * `cars.xlsx` (tricky!)
+
+Clean up and convert to long format (what seems to be the problem? How do
+we deal with that?):
+
+ * `mtcars_wide.csv`
+

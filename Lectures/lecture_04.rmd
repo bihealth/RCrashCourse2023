@@ -1,0 +1,428 @@
+---
+title: "R crash course / 04"
+author: ""
+date: "`r Sys.Date()`"
+output:
+  ioslides_presentation: 
+    widescreen: true
+    smaller: true
+    css: files/style.css
+    logo: files/logo_bihealth_en.png
+---
+
+```{r,echo=FALSE}
+## Set default options for the knitr RMD processing
+knitr::opts_chunk$set(echo=TRUE,eval=FALSE,warning=FALSE,message=FALSE,fig.width=5,fig.height=5,cache=FALSE,autodep=TRUE, results="hide")
+knitr::opts_knit$set(root.dir = "../")
+```
+
+```{r, eval=TRUE, echo=FALSE, message=FALSE}
+library(readxl)
+library(beeswarm)
+library(tidyr)
+library(sm)
+library(zoo)
+library(RColorBrewer)
+```
+
+## Aims for today
+
+* Searching, sorting and selecting
+* Matching and merging data
+* Visualization
+
+![](images/data-science.png){ width=600px }
+
+# Searching, sorting and selecting
+
+## sort and order
+
+`sort` directly sorts a vector:
+
+```{r}
+v <- sample(1:10)/10 # randomize numbers 1-10
+sort(v)
+
+## decreasing 
+sort(v, decreasing=TRUE)
+
+## same as
+rev(sort(v))
+```
+
+However, `order` is more useful. It returns the *position*
+of a value in a sorted vector.
+
+```{r}
+order(v)
+order(v, decreasing=TRUE)
+```
+
+## sort and order cont.
+
+`sort` and `order` can be applied to character vectors as well:
+
+```{r}
+l <- sample(letters, 10)
+sort(l)
+order(l, decreasing=TRUE)
+```
+
+Note that sorting values turned to a character vector will not give
+expected results:
+
+```{r}
+v <- sample(1:200, 15)
+sort(as.character(v))
+```
+
+## Sorting data frames
+
+To sort a data frame according to one of its columns, we use `order` and
+then select rows of a data frame based on that order. That is the "classic"
+way of sorting.
+
+```{r}
+df <- data.frame(id=paste0("ID", 1:10), val=rnorm(10))
+ord <- order(df$val)
+df[ ord, ]
+df[ order(df$val, decreasing=TRUE), ]
+df[ order(abs(df$val), decreasing=TRUE), ]
+```
+
+For numeric values, instead of `decreasing=TRUE`, you can just order by
+`-abs(df$val)`.
+
+## Sorting data frames with tidyverse
+
+Sorting with tidyverse is easier. 
+
+```{r}
+arrange(df, val)
+
+## reverse sort
+arrange(df, desc(val)) 
+
+## largest absolute values first
+arrange(df, desc(abs(val))) 
+```
+
+## Sorting data frames with tidyverse
+
+
+```{r}
+arrange(df, val)
+```
+
+Note the lack of quotes around `val`! This is a feature in tidyverse which
+has two effects:
+
+ * it is easier to type (you save the typing of `df$`!
+   imagine how much time you have now)
+ * it is confusing for beginners ("why are there no quotes?", "when should
+   I use quotes and when not?", "how does it know that it is `df$val` and
+   not some other `val`?") 
+ * makes programming confusing (what if
+   "val" holds the *name* of the column that you would like to sort by? -
+   use `.data[[val]]`; Or is some other vector by which you wish to sort?)
+
+
+## Example
+
+```{r, eval=TRUE}
+## read the transcriptomic results data set
+res <- read.csv("Datasets/transcriptomics_results.csv")
+
+## only interesting columns
+res <- res[ , c(3, 5, 8:9) ]
+colnames(res) <- c("Gene", "Description", "LFC", "p.value")
+```
+
+
+## Example cont.
+
+We can use sort, factor and level to find out more about our data set:
+
+```{r}
+desc.sum <- summary(factor(res$Description))
+head(sort(desc.sum, decreasing=TRUE))
+```
+
+*Data from: Weiner, January, et al. "Characterization of potential
+biomarkers of reactogenicity of licensed antiviral vaccines: randomized
+controlled clinical trials conducted by the BIOVACSAFE consortium."
+Scientific reports 9.1 (2019): 1-14.*
+
+## Example cont.
+
+```{r}
+## order by decreasing absolute logFC
+ord <- order(abs(res$LFC), decreasing=TRUE)
+res <- res[ord, ]
+plot(res$LFC[1:250], type="b")
+
+## then, order by p-value
+ord <- order(res$p.value)
+res <- res[ord, ]
+plot(abs(res$LFC[1:250]), type="b")
+plot(res$p.value[1:250], type="b", log="y")
+```
+
+## Plot with LOESS smoothing
+
+```{r, eval=FALSE}
+lo <- loess.smooth(1:500, abs(res$LFC[1:500]))
+plot(abs(res$LFC[1:500]), col="grey", type="b", bty="n",
+  ylab="Log2 fold change")
+lines(lo$x, lo$y)
+```
+
+## Plot with LOESS smoothing
+
+```{r, eval=TRUE,echo=FALSE,fig.width=7,fig.height=5}
+## with echo=FALSE, this code does not show on presentation
+## otherwise the figure does not fit!
+ord <- order(abs(res$LFC), decreasing=TRUE)
+res <- res[ord, ]
+ord <- order(res$p.value)
+res <- res[ord, ]
+
+lo <- loess.smooth(1:500, abs(res$LFC[1:500]))
+plot(abs(res$LFC[1:500]), col="grey", type="b", bty="n",
+  ylab="Log2 fold change")
+lines(lo$x, lo$y)
+
+```
+
+## Selecting / filtering of data frames
+
+There are two ways, both simple. In both of them, you need to have a
+logical vector that indicates which rows to keep and which to remove.
+
+```{r eval=FALSE}
+keep <- res$p.value < 0.05
+res[ keep, ]
+
+## or
+
+filter(res, p.value < 0.05)
+## note that we don't have to type "res$p.value", 
+## see comment about tidyverse above
+```
+
+## Excercise 4.1
+
+ * Load the example transcriptomic data (`transcriptomics_results.csv`)
+ * Try sorting of the data frame; by gene name, by identifier, by log fold
+   change, by absolute log fold change (you can use any method)
+ * Create a data frame which contains only genes which have significant
+   differences at p < 0.05 and abs(log2FC) > 1.5.
+ * How many genes are significantly down-regulated?
+ * Order the new data frame by Gene name (A-Z)
+
+# Searching and subsetting
+
+## Searching through data frames
+
+With `%in%`, it is easy to select keywords matching a set.
+
+```{r}
+interferon <- c("TAP1","IFIH1","IRF7","PARP9","STAT1","PLSCR1",
+                "IFITM1","HERC5","DDX60","USP18","RSAD2","IFIT1")
+sel <- res$Gene %in% interferon
+res[ sel, ] ## or: filter(res, Gene %in% interferon)
+```
+
+## `match()`
+
+We can also use match, which for each element of one vector returns the
+position of that element in the second vector:
+
+```{r}
+matches <- match(interferon, res$Gene)
+res[matches, ]
+```
+
+Note however that `match()` looks for the *first* occurence of a match,
+whereas `%in%` will return all matches.
+
+
+## Searching for patterns
+
+What if we don't know the exact name, or if we want to match a more general
+pattern? 
+
+For this, we can use `grepl()` (which returns a logical vector) or `grep()`
+(which is the same as `which(grepl())`).
+
+
+```{r}
+int <- grep("Interferon", res$Description)
+length(int) # no matches
+
+int <- grep("Interferon", res$Description, ignore.case=TRUE)
+head(int)
+head(res[int, ])
+```
+
+## More regular expressions
+
+```{r}
+## search for GBP1, GBP2, GBP3, 
+## but not GBP12 or pseudo-GBP1
+sel <- grep("^GBP[123]$", res$Gene)
+res[ sel, ]
+
+## search for either cytokine or chemokine
+sel <- grep("(cytokine|chemokine)", res$Description, ignore.case=TRUE)
+length(sel)
+head(res[ sel, ])
+```
+
+## More regular expressions (cont.)
+
+We can use the parentheses for substitution as well. Please don't mind that
+weird `\\1`, just learn it.
+
+Remember – `.*` means any character (`.`) any number of times (`*`).
+`[0-9]*` means any digit (`[0-9]`) any number of times (`*`).
+
+```{r}
+## say we only want the middle part
+a <- c("ID-1-2020", "ID-3-2019", "ABC-4-2018")
+
+## extract the middle part
+gsub(".*-(.*)-.*", "\\1", a)
+```
+
+## Combining searches
+
+We can use the logical operators (`&` and `|`) to combine searches. Thus,
+we use `grepl()` rather than `grep()`.
+
+```{r}
+sel <- res$Gene %in% interferon
+significant <- abs(res$LFC) > 1 & res$p.value < 0.05
+sel <- sel & significant
+
+res[sel, ] ## or: filter(res, sel)
+```
+
+
+## Excercise 4.2
+
+ * Search for ribosomal genes. How many did you find?
+ * Create a data frame which contains only genes that are not "Other" or
+   "Unknown".
+ * Find all significantly upregulated cytokines.
+ * How many interleukine genes are significantly down-regulated?
+
+# Matching data sets
+
+## Finding common IDs
+
+We can use `intersect()` for that.
+
+```{r}
+set1 <- letters[1:5]
+set2 <- letters[3:7]
+intersect(set1, set2)
+```
+
+
+## Finding common IDs cont.
+
+
+```{r}
+df1 <- data.frame(ID=sample(letters, 15), value1=rnorm(15))
+df2 <- data.frame(ID=sample(letters, 15), value2=rnorm(15))
+common <- intersect(df1$ID, df2$ID)
+
+df1[ match(common, df1$ID), ]
+df2[ match(common, df2$ID), ]
+
+cbind(df1[ match(common, df1$ID), ], df2[ match(common, df2$ID), ])
+```
+
+## Merging
+
+A better, but more complex solution to merge two data frames is the
+`merge()` function.
+
+Some SQL terminology:
+
+ * inner join: we are merging only common elements
+ * outer join: we are making sure that elements from both sets are taken
+   over
+ * left outer join: same, but only for the first set
+ * right outer join: same, but only for the second set
+
+
+## Merging (cont.)
+
+Usage of the `merge()` function:
+
+```{r}
+merge(df1, df2) # inner join by default
+merge(df1, df2, all.x=TRUE) # left outer join
+merge(df1, df2, all.y=TRUE) # right outer join
+merge(df1, df2, all=TRUE) # outer join
+```
+
+Note: tidyverse contains functions `inner_join`, `outer_join` etc. which
+look slightly more specific (but do the same).
+
+## Merging (cont.)
+
+The `by`, `by.x` and `by.y` parameters tell `merge` which columns contain
+the identifiers by which to join. It is always safer to specify this
+parameter!
+
+```{r}
+df1 <- data.frame(ID=c("a", "a", "b", "c"), no=c(1, 2, 3, 4), 
+  value=rnorm(4))
+df2 <- data.frame(ID=c("a", "a", "b", "c"), no=c(1, 2, 3, 4), 
+  value=rnorm(4))
+merge(df1, df2)           ## not what we wanted
+merge(df1, df2, by="ID")  ## not what we wanted
+merge(df1, df2, by=c("ID", "no"))
+```
+
+## Merging (cont.)
+
+A simpler (but requiring more steps) alternative would be to make a new
+identifier:
+
+```{r}
+df1$ID2 <- paste(df1$ID, df1$no, sep=".")
+df2$ID2 <- paste(df2$ID, df2$no, sep=".")
+merge(df1, df2, by="ID2")
+```
+
+## Another example
+
+```{r}
+df1 <- data.frame(subject.id=1:3, sex=c("M", "F", "F"), 
+  age=c(28, 35, 29))
+df2 <- data.frame(subject.id=rep(1:3, each=2), 
+  timepoint=rep(1:2, 3), value=rnorm(6))
+merge(df1, df2, by="subject.id")
+```
+
+
+## Excercise 4.3
+
+The files `expression_data_vaccination_example.xlsx` and
+`labresults_full.csv` contain data from the same study.
+
+ 1. read the first sheet from the XLSX file and the CSV file.
+ 3. Which columns ID the subjects? Are there any subjects in common? How do
+    you match the subjects?
+ 5. We are interested only in the following information: Subject ID, ARM
+    (group), Time point, sex, age, test name and the actual measurement.
+    Are the measurements numeric? Remember, you can use expressions like `[ , c("ARM", "sex") ]` 
+    to select the desired columns from a data set.
+ 4. Use the subjects to merge the two data frames however you see fit. Note
+    that there are multiple time points per subject and multiple
+    measurements per subject and time point.
+

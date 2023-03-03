@@ -1,0 +1,46 @@
+---
+title: "Suggested books"
+author: "January Weiner"
+output: html_document
+---
+
+Books which I have shown you during the course:
+
+ 1. R Cookbook by Paul Teetor
+
+ 2. R Graphics Cookbook by Winston Chang, [available online](https://r-graphics.org/)
+
+ 3. The R Book by Michael J. Crawley – a great guide to statistics with R
+
+ 4. Visual Display of Quantitative Information by Edward Tufte: a beautiful
+    book discussing principles of data presentation.
+
+ 5. Datendesign mit R by Thomas Rahlf
+
+
+Suggested Links:
+
+ 1. Cheat sheets:
+   * [R cheat sheet](https://rstudio.com/wp-content/uploads/2016/10/r-cheat-sheet-3.pdf)
+   * [ggplot2](https://rstudio.com/wp-content/uploads/2016/11/ggplot2-cheatsheet-2.1.pdf)
+
+ 2. R markdown:
+  
+   *  [R markdown definitive guide](https://bookdown.org/yihui/rmarkdown/)
+ 
+ 3. Stackexchange:
+
+   * [StackOverflow](https://stackoverflow.com)
+   * [CrossValidated](https://stats.stackexchange.com)
+ 
+ 4. [Statistical tools for high throughput data analysis](https://sthda.com)
+
+ 5. [R-bloggers](R-bloggers.com)
+ 6. [Collection of R-statistics](http://r-statistics.co/)
+ 7. [R cookbook](http://www.cookbook-r.com/)   
+ 8. Regular expressions:
+    
+    * [Test regexp](https://regexr.com)
+    * [R cheat sheet](https://rstudio.com/wp-content/uploads/2016/09/RegExCheatsheet.pdf)
+    
+ 9. [R for data science](https://r4ds.had.co.nz)

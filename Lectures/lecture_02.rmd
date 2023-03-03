@@ -1,0 +1,337 @@
+---
+title: "R crash course / 02"
+author: ""
+date: "`r Sys.Date()`"
+output:
+  ioslides_presentation: 
+    widescreen: true
+    smaller: true
+    css: files/style.css
+    logo: files/logo_bihealth_en.png
+---
+
+```{r,echo=FALSE}
+## Set default options for the knitr RMD processing
+knitr::opts_chunk$set(echo=TRUE,eval=FALSE,warning=FALSE,message=FALSE,fig.width=5,fig.height=5,cache=TRUE,autodep=TRUE, results="hide")
+```
+
+## Aims for today
+
+* Complex data structures (matrices, lists and data frames)
+* Writing your own functions
+* Reading data from files
+
+## Repetitorium of Day 1
+
+## Creating a function
+
+```{r eval=FALSE,echo=TRUE}
+#' Function name
+#' Function description
+some_name <- function(param1, param2=2) {
+
+## code comment
+# <your code goes in here>
+
+}
+```
+
+## Exercise 2.1
+
+There is a lake in a garden. Every day, the water lilies cover twice as
+much area as the previous day. On the first day, the water lilies cover
+1/100th of the area of the lake.
+
+ * What is the formula to calculate the area covered by the water lilies on
+   day n? (pen and paper, not in Rstudio!)
+ * assign days 1 ... 10 to variable x (use `c()` or `:`). Now assign the fraction of the area
+   covered by water lilies on day n to variable y
+ * plot x vs y (use the simple `plot()` function)
+ * When will the half of the area be covered by water lilies? Use `abline(h=.5)`
+   (what does it do?) to show a graphical solution
+ * What is the fraction on day 3? Hint: what does `y[3]` do?
+ * Speaking of which, what does `y[4:5]` do? (just try it!)
+
+## Exercise 2.2
+
+ * Make the plot yourself.
+ * use 'col' parameter of `plot` and a color name (e.g. "red") to change
+   the color of the line (`plot(..., col="red")`)
+ * what if each day the lilies cover a fraction of area that is 1.5 the
+   fraction of area on the previous day?
+ * Use `lines(x, y)` function to put a second line on the plot
+ * For more experienced users: Create a Rmarkdown.
+
+## Creating your own functions for fun and profit
+
+ * If you have to write something more than twice, you should turn it into
+   a function!
+ * R is a *functional* language
+
+
+## Example
+
+```{r eval=FALSE,echo=TRUE}
+
+#' Function for pond calculation
+pond_surface_covered <- function(init_pond_surface, day=0) {
+
+  ## "**" and "^" do the same thing
+  ret <- init_pond_surface * 2^day
+
+  return(ret)
+}
+```
+
+
+## Example
+
+
+```{r eval=FALSE,echo=TRUE}
+
+#' Generate a random sample from a given distribution
+#' Usage: randsamp(n) where n is the size of the sample
+
+randsamp <- function(n, d="uniform") {
+
+  if(d == "uniform") {
+    ret <- runif(n)
+  } else if(d == "normal") {
+    ret <- rnorm(n)
+  } else {
+    stop("I don't know this distribution!")
+  }
+
+  return(ret)
+}
+```
+
+## Exercise 2.3
+
+Take the function above and add a new option: the binomial distribution.
+Which function can give you that? Search for a suitable function.
+
+Note: binomial distribution is essentially what you get when you throw a
+coin a number of times and add the results (1 for heads, 0 for tails). 
+This function requires two more parameters: number of "coin tosses"
+and probability of "heads". You need to adapt the code accordingly: choose
+something meaningful, e.g. size=1 and prob=0.5 to simulate a single fair
+coin toss.
+
+**Additional exercise:** Compare the distributions using plot(density(x)),
+where x is the output of your function.
+
+
+## Data matrices
+
+Much like vectors, matrices can only hold one data type (e.g. only numeric
+or only character or only logical etc.).
+
+```{r}
+m <- matrix(1:18, ncol=3, nrow=6)
+# compare with
+m <- matrix(1:18, ncol=3, nrow=6, byrow=TRUE)
+dim(m)
+ncol(m)
+nrow(m)
+```
+
+## Accessing columns, rows and element
+
+`matrix[row, column]`
+
+So, for example:
+
+```{r}
+m[1, ] # vector which is the first row
+m[, 2] # vector which is the first column
+m[3, 1] # first element of the third row
+```
+
+## Row and column names
+
+We can name rows and columns of a matrix and use the names to access the
+rows and columns:
+
+```{r}
+colnames(m) <- letters[1:ncol(m)]
+rownames(m) <- LETTERS[1:nrow(m)]
+
+m["A", "b"]
+m["B", ] # etc.
+```
+
+## Remember
+
+ * If you select a single column or a single row, you will get a vector
+ * If you select more than one row or column, you will get a (smaller) matrix
+ * If you select more rows or columns than are present, you will get a
+   "subscript out of bonds" error
+
+## Demonstration
+
+
+## Lists
+
+ * Lists hold all types of information
+ * Lists are really, really cool
+ * Lists have elements. An element of a list can have *any* type, including
+   another list.
+
+## Lists
+
+ Caveats:
+
+ * You access elements of a list using `[[`, not `[`
+ * Lists may have names (set with `names()`), but don't have to
+
+## Data frames
+
+Data frames are a bit like matrices, but every column can store different
+type of data. In this, they are more like lists (which they in fact are).
+
+```{r}
+names <- c("January", "Manuela", "Bill")
+lastn <- c("Weiner", "Benary", "Gates")
+age   <- c(1001, NA, 65)
+
+d <- data.frame(names=names, last_names=lastn, age=age)
+class(d)
+class(d[,1])
+class(d[,3])
+```
+
+## Accessing elements in data frames
+
+You can access the data frame elements much like the elements of a matrix.
+
+However, since data frames are lists, the list operator (`$`) also works:
+
+```{r}
+d$names # same as d[,1] or d[, "names"]
+d$lastn
+d$lastn[1]
+```
+
+However, note that when you select a row, you will get a data frame, not a
+vector. This is because each of the column can be of different type, and
+vectors can hold only one type of data.
+
+## Matrices vs data frames
+
+ Caveats:
+
+  * data frames sometimes turn strings to factors (more on that later), which may have really
+    disastrous consequences, use `stringsAsFactors=FALSE`
+  * small typos can turn a numeric vector into a string
+  * factors are dangerous to work with, use them cautiously
+
+  Gory details: matrices are a basic data type. Data frames are a list.
+
+## Data frames vs tibble
+
+ Caveats:
+
+ * tibbles are the data frames from tidyverse
+ * Whatever you can do to a data frame, you can do to a tibble as well
+ * `read_*` functions return a tibble
+ * tibble do not have row names
+ * If you select a single row in a data frame, you get a smaller data
+   frame. If you select a single column, you get a vector.
+ * In tibble, you always get a smaller tibble.
+
+
+## Exercise 2.4
+
+ * Create a 5x3 matrix with random numbers. Use `matrix` and `rnorm`.
+ * Turn the matrix into a data frame. Use `as.data.frame` for that.
+ * Add column and row names.
+ * Add a column. Each value in the column should be "A" (a string). Use the
+   `rep` function for that.
+ * Add a column with five numbers from 0 to 1. Use the `seq` function for that.
+
+## Using rep
+
+`rep()` is used to replicate vectors.
+
+```{r}
+rep(c("A", "B"), 5) 
+# result:
+#  [1] "A" "B" "A" "B" "A" "B" "A" "B" "A" "B"
+
+rep(c("A", "B"), each=5)
+# result
+# [1] "A" "A" "A" "A" "A" "B" "B" "B" "B" "B"
+```
+
+# Reading and writing data
+
+## Reading data
+
+Main data types you will encounter:
+
+---------------------------- ------------------------------- ------------------------------- --------------------------
+Data type                    Function                        Package                         Notes
+---------------------------- ------------------------------- ------------------------------- --------------------------
+Columns separated by spaces  `read_table()`                  `readr`                         one or more
+                                                                                             spaces separate 
+                                                                                             each column
+                                                             
+TSV / TAB separated values   `read_tsv()`                    `readr`                         Delimiter is tab (`\t`).
+                                                             
+CSV / comma separated        `read_csv()`                    `readr`                         Comma separated values
+                                                                                             
+Any delimiter                `read_delim()`                  `readr`                         Customizable
+                                                             
+XLS (old Excel)              `read_xls()`                    `readxl`                        Just don't use it.
+                             `read_excel()`                                                  From the
+                                                                                             `readxl`
+                                                                                             package.
+                                                             
+XLSX (new Excel)             `read_xlsx()`                   `readxl`                        From the `readxl` package.
+                             `read_excel()`                                                  You need to
+                                                                                             provide the
+                                                                                             sheet number
+                                                                                             you wish to
+                                                                                             read. 
+                                                                                             Note: returns a tibble,
+                                                                                             not a data frame! 
+---------------------------- ------------------------------- ------------------------------- --------------------------
+
+Note: there are also "base R" functions `read.table`, `read.csv`,
+`read.tsv` (there is no function for reading XLS[X] files in base R). The
+tidyverse functions above are preferable.
+
+
+## Excercise 2.5
+
+Read, inspect the following files:
+
+ * `TB_ORD_Gambia_Sutherland_biochemicals.csv`
+ * `iris.csv`
+ * `meta_data_botched.xlsx` 
+
+ 1. Which functions would you use? 
+ 1. What kind of issues can you detect?
+ 1. Suggestions of solving the issues?
+ 
+The function `readxl_example("deaths.xls")` returns a file name. Read this file. How can you omit the lines at the top and at the bottom of the file?
+(hint: `?read_excel`). How can you force the date columns to be interpreted
+as dates and not numbers?
+
+
+## Tibbles / readxl
+
+tibbles belong to the tidyverse. They are nice to work with and very
+useful, but we can stick to data frames for now. Therefore, do
+
+```{r}
+mydataframe <- as.data.frame(read_xlsx("file.xlsx"))
+```
+
+One crucial difference between tibble and data frame is that `tibble[ , 1 ]` 
+returns a tibble, while `dataframe[ , 1]` returns a vector. The second
+crucial difference is that it does not support row names (on purpose!).
+
+
+

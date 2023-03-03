@@ -1,0 +1,232 @@
+---
+title: ""
+author: ""
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+# About this document
+
+This document has been written in markdown / rmarkdown and converted to
+HTML. You can view the markdown directly on the github repository (find the
+files with the .rmd ending); if you download this file, you will be able to
+open it directly in rstudio.
+
+# Getting help
+
+Use `?` and `??` to get contextual help in R. Note that if you want to look
+for a help page for anything other than a "regular" name, e.g. an operator,
+  you ned to put it in quotes:
+
+```
+??"%in%"
+```
+
+# Variable types
+
+## Investigating variable types 
+
+`class` returns the class of a variable. `str` shows a shortened summary of
+what the variable structure is.
+
+## Numeric vs character variables
+
+```
+a <- c(1, 2, 3)
+a <- 1:3
+```
+
+`seq` can be used to create arbitrary sequences with specified length or
+specified step.
+
+```
+a <- seq(1, 3, length.out=100)
+a <- seq(1, 3, by=.1)
+```
+
+If the vector contains strings, the result will automatically be a
+character vector:
+
+```
+a <- c("a", "b", 6)
+a <- c(1, 2, "3")
+```
+
+You can explicitely convert strings to numeric vectors:
+
+```
+a <- c("1", "2", "30", " 2")
+as.numeric(a)
+```
+
+Numbers which cannot be converted to numerals will be replaced by "Not
+available" – `NA`.
+
+## Vectors
+
+Vectors are created with the function `c()`:
+
+```
+a <- c(1, 2, 3)
+```
+
+Another function useful to create numeric vectors:
+
+```
+rep(c(1, 2), 4)
+rep(c(1, 3), each=3)
+```
+
+Note that all values in a vector must be of the same type (e.g. numeric,
+character or logical).
+
+To access elements of a vector, we use the bracket `[` operator:
+
+```
+a <- 1:10
+a[1]
+a[2:5]
+a[c(1, 2, 5)] # first, second and fifth element
+```
+
+In R, most operators will work on the whole vector. 
+
+```
+a <- 1:10
+a * 2    # returns c(2, 4, ...)
+a + 10   # returns c(11, 12, ...)
+```
+
+Some important functions for vectors. Find out what they do:
+
+```
+sum(a)
+mean(a)
+var(a)
+sd(a)
+length(a)
+```
+
+
+## Logical operators and vectors
+
+Logical vectors and variables can take only one of two values: `TRUE` or
+`FALSE`. There is a shorthand for these (`T` and `F`, respectively), but
+don't use it, because these shorthands can be redefined.
+
+We can use logical vectors as *subscripts* to select element from a
+vector:
+
+```
+pvals <- c(.5, 1, .01, .1, .005)
+genes <- c("BATF2", "ANKRD22", "IFNG", "TERT", "NFKB")
+
+genes[ pvals < .05 ]
+```
+
+There are two types of logical operators. 
+
+`&` and `|` return a vector. These forms are used most frequently, as they
+are extremely useful in combining logical vectors:
+
+```
+pvals <- c(.05, .04, 1, 0.7, .1, .01, .02)
+lfcs <- c(1.5, -1.2, 2, 1.5, -0.7, -1.4, 0.9)
+
+pvals.sign <- pvals < .05
+lfcs.large <- abs(lfcs) > 1 # what does abs() do?
+
+## how many significant pvals and lfcs do we have?
+sum(pvals.sign)
+sum(lfcs.large)
+
+## both large lfc and significant pvals
+pvals.sign & lfcs.large
+
+## same as above without additional variables:
+pvals < .05 & abs(lfcs) > 1
+```
+
+`&&` and `||` return a single value and are mostly used in combination with
+`if(...)`.
+
+```
+if(a > 5) {
+  print("a is larger than 5")
+} else {
+  print("a is not larger than 5")
+}
+```
+
+Finally, the operator `!` ("bang", or *negation*) is the same whether you
+use vectors or single values:
+
+```
+a <- pvals < .05
+!a
+```
+
+## Factors
+
+Factors are used for categorical variables. They are necessary in many
+statistical analyses.
+
+```
+group <- c("Patient", "Control", "Control ", "Patient", "Control")
+class(group)
+group <- factor(group)
+class(group)
+summary(group)
+levels(group)
+```
+
+## Lists
+
+Lists are an enormously versatile and important data type. List are
+containers that allow to put together variables of different type:
+
+```
+person1 <- list(name="January", lastname="Weiner", fingers=c(5, 5, 5, 5))
+person2 <- list(name="Three Finger Joe", lastname="NN", fingers=c(3, 5, 5, 5))
+person3 <- list(name="Zarggz'h", lastname="X1232", fingers=c(7, 7, 7, 7))
+```
+
+To access elements of a named list, we can use either a double bracket or a
+dollar `$` operator:
+
+```
+person1$fingers
+person2[[1]]
+```
+
+Lists can also be elements of a list:
+
+```
+mypeople <- list(person1, person2, person3)
+```
+
+This last list is *unnamed* and to access its element we need to use the
+`[` bracket operator again. Single bracket returns a shortened list, while
+a double bracket returns the actual element of the list.
+
+```
+mypeople[1]
+mypeople[2:3]
+mypeople[[1]]
+```
+
+
+# Functions
+
+Simple function definition looks as follows:
+
+```
+#' Short description what the function does
+someMeaningfulName <- function(par1, par2=pi, par3=10) {
+  result <- sin(par1 + par2 + par3)
+  return(result)
+}
+```
+
+Functions should ideally communicate with the environment only using parameters to
+the function and the return value.
