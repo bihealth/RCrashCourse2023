@@ -229,7 +229,7 @@ students[sel] <- c("Arthur", "Beate")
  * What happens when you do `students[-1]`? What does that `-` sign seem to
    do?
 
-# Factors
+## Factors
 
 Some variables are factors. Factors look almost like strings, but they have a
 slightly different behavior. Sometimes factor behave like numbers.
@@ -240,7 +240,7 @@ In statistics, factors play an important role.
 exist.**
 
 
-```{r}
+```{r eval=FALSE,echo=TRUE}
 f_teachers <- factor(teachers)
 as.numeric(f_teachers)
 as.character(f_teachers)
@@ -278,6 +278,52 @@ Keep your code clean:
 
 E.g.
 http://web.stanford.edu/class/cs109l/unrestricted/resources/google-style.html
+
+
+## Examples
+
+<div style="float: left; width: 35%;">
+### Bad:
+
+```{r eval=FALSE,echo=TRUE}
+a <- 5
+
+b <- c(1,10, 
+20, 21, 5)
+
+r<-sqrt((b-mean(b))^2/a)
+
+```
+
+</div>
+
+<div style="float: right; width: 5%;">
+
+</div>
+
+<div style="float: right; width: 60%;">
+### Better:
+
+```{r eval=FALSE,echo=TRUE}
+# example values for five samples
+samples   <- c(1, 10, 20, 21, 5)
+samples_n <- length(samples)
+
+samples_mean <- mean(samples)
+samples_devs <- samples - samples_mean
+
+# samples variance
+samples_var  <- samples_devs^2 / (samples_n - 1)
+
+# calculate standard deviation of samples
+samples_sd   <- sqrt(samples_var)
+
+# use the built-in function
+samples_sd <- sd(samples)
+
+```
+
+</div>
 
 ## Introducing functions (look ahead for day 2)
 
