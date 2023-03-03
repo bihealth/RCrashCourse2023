@@ -84,14 +84,8 @@ project in this directory.
 
 ## Example R session
 
-First example
 
-```{r eval=FALSE,echo=TRUE}
-iris <- read_tsv("iris.tsv")
-```
-
-
-## Why doesn't it work?
+## When things don't work...
 
 ![Error 1](images/error_01.png)
 
@@ -101,6 +95,8 @@ iris <- read_tsv("iris.tsv")
 
  * Do not ignore error messages. Very often, they tell you exactly what the
    problem is.
+
+ * Google it!
 
 
 
@@ -166,24 +162,32 @@ i <- length(a)
 
 Try it out!
 
-## Exercises 1.1
+## Exercises 1.1 Creating variables
 
- * create variables: a string, a number, a factor
-   * how to create the variables?
-   * how to view the variables?
- * create a factor variable 
-   * use the function `factor()`
- 
-## Exercises 1.2
-  
+ create variables: a string, a number, a factor
+
+   * create a string variable called "teacher" containing the word "manuela"
+   * create a string variable called "teachers" containing two values:
+     "manuela" and "january"
   * what does `1:5` do?
+  * create a variable containing numbers from 1 to 10
+
+Note: play with the computer, try out things
+
+## Exercises 1.2 Vectorization
+
   * what happens when you add a number to a vector? (i.e. `c(3, 1, 4) + 5`)
   * what happens when you multiply a vector with a number?
-  * what happens when you add two vectors?
+  * add vector `c(1, 2, 5)` and vector `c(10, 20, 30)`. What happens?
+  * type `length(teacher)`; type `length(teachers)`; what are the results?
+  * type `pi`. What happens?
+  * say, you have thre values which are the diameters of three circles: 1,
+    5 and 13. You would like to have a vector containing the areas of these
+    circles. What is the simplest way of doing that?
 
-## Exercises 1.3
+## Exercises 1.2(b) Extra: recycling
 
-  Try the following code:
+(Extra exercise: only if you are bored!)
 
 ```{r eval=FALSE,echo=TRUE}
 vec1 <- 1:10
@@ -197,6 +201,55 @@ This produces a warning message. Should you be worried? What happened?
 What does the `length()` function do?
 
 
+
+## Comment: vectorization
+
+In R, a lot of things are vectors and this is very convenient. 
+
+If you assign a value to a variable: `counter <- 5` you are in fact
+creating a vector of length 1.
+
+## Exercise 1.3: Selecting elements from vectors
+
+ * Type `teachers[1]`. Now type `teachers[2]`. What happens?
+
+ * Now type the following. What exactly is happening here?
+
+```{r eval=FALSE,echo=TRUE}
+students <- c("Anna", "Bernie", "Claudia", "David")
+sel <- c(1, 2)
+
+students[sel]
+students[sel] <- c("Arthur", "Beate")
+```
+
+ * What would `students[1:3]` do and why?
+ * Can you do `students[c(3, 1)]`? What happens?
+ 
+ * What happens when you do `students[-1]`? What does that `-` sign seem to
+   do?
+
+# Factors
+
+Some variables are factors. Factors look almost like strings, but they have a
+slightly different behavior. Sometimes factor behave like numbers.
+
+In statistics, factors play an important role.
+
+**You don't have to learn about factors yet, but you should know that they
+exist.**
+
+
+```{r}
+f_teachers <- factor(teachers)
+as.numeric(f_teachers)
+as.character(f_teachers)
+```
+
+
+
+
+
 # Good coding practices
 
 ## Remember: language is communication
@@ -205,39 +258,6 @@ What does the `length()` function do?
  * And this is a good thing!
  * Documentation *is* important
  * Reproducibility matters
-
-
-## Literate programming
-
-![Donald E. Knuth](images/knuth.jpg)
-
-
-## Literate programming
-
-I believe that the time is ripe for significantly better documentation
-of programs, and that we can best achieve this by considering
-programs to be works of literature. Hence, my title: “Literate
-Programming.”
-
-Let us change our traditional attitude to the construction of
-programs: Instead of imagining that our main task is to instruct a
-computer what to do, let us concentrate rather on explaining to
-human beings what we want a computer to do.
-
-(Donald E. Knuth)
-
-## Literate programming
-
-The practitioner of literate programming can be regarded as an
-essayist, whose main concern is with exposition and excellence of
-style. Such an author, with thesaurus in hand, chooses the names of
-variables carefully and explains what each variable means. He or she
-strives for a program that is comprehensible because its concepts
-have been introduced in an order that is best for human
-understanding, using a mixture of formal and informal methods that
-reinforce each other.
-
-(Donald E. Knuth)
 
 ## Documenting your code
 
@@ -250,43 +270,22 @@ reinforce each other.
 
 Keep your code clean:
 
- * be consistent!
+ * be consistent
  * use meaningful variable and function names
  * don't use shorthands
- * refactorize
- * create distinct code chunks
  * split the code into meaningful scripts
  * use a formatting style and stick to it
 
 E.g.
 http://web.stanford.edu/class/cs109l/unrestricted/resources/google-style.html
 
-## Simplify!
-
- * make your code as simple as possible
- * make your functions versatile and simple
- * use simple data types if possible
- * don't overdo it!
-
-## You never know
-
- * what your code evolves into
- * when you will need to publish it
- * when someone will want to see it
-
-…so prepare in advance!
-
-## Summary Day 1
+## Introducing functions (look ahead for day 2)
 
  * Everything in R is a function. It takes a certain number of parameters
-   and returns exactly one value.
- * Some special functions are *operators*.
+   and returns exactly one value (which may be a vector or something else)
+ * Some special functions are *operators*, like `+` or `-`
  * Values can be assigned to variables (e.g. `a <- 2`).
  * There are different types of values, including vectors. There are
    numeric, character, logical and factor vectors.
- * Factors are important, but dangerous. Never create a factor from integer
-   numbers!
- * Use `read_*` family of functions (e.g. `read_csv`, `read_tsv` etc.) for
-   reading files.
- 
- * Keep track of workspaces / projects. Use one directory for one project
+
+**Demo**
