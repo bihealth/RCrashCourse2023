@@ -18,25 +18,30 @@ knitr::opts_chunk$set(echo=TRUE,eval=FALSE,warning=FALSE,message=FALSE,fig.width
 ## Aims for today
 
 * Complex data structures (matrices, lists and data frames)
-* Writing your own functions
+* Functions in R
 * Reading data from files
 
 ## Repetitorium of Day 1
 
-## Creating a function
+Questions, anybody?
+
+## Functions in R: a brief introduction
 
 ```{r eval=FALSE,echo=TRUE}
-#' Function name
-#' Function description
-some_name <- function(param1, param2=2) {
-
-## code comment
-# <your code goes in here>
-
-}
+samples   <- c(1, 10, 23, 42, 13)
+samples_n <- length(samples)
 ```
 
-## Exercise 2.1
+ * Both `c` and `length` are functions. They take some arguments (often many
+of them) and return a single object: a vector, a matrix or something else.
+
+ * You can always assign the result of the function to a variable.
+
+ * Sometimes functions return `NULL`, which is R for "nothing", but which is
+still something you can use or assign.
+
+
+## Exercise 2.1 More on vectors (and functions)
 
 There is a lake in a garden. Every day, the water lilies cover twice as
 much area as the previous day. On the first day, the water lilies cover
@@ -52,7 +57,7 @@ much area as the previous day. On the first day, the water lilies cover
  * What is the fraction on day 3? Hint: what does `y[3]` do?
  * Speaking of which, what does `y[4:5]` do? (just try it!)
 
-## Exercise 2.2
+## Exercise 2.2: More on plotting
 
  * Make the plot yourself.
  * use 'col' parameter of `plot` and a color name (e.g. "red") to change
@@ -62,65 +67,98 @@ much area as the previous day. On the first day, the water lilies cover
  * Use `lines(x, y)` function to put a second line on the plot
  * For more experienced users: Create a Rmarkdown.
 
-## Creating your own functions for fun and profit
+## Logical vectors
 
- * If you have to write something more than twice, you should turn it into
+In R, there are two special values: `TRUE` and `FALSE`. They can be used to
+create logical vectors.
+
+```{r eval=FALSE, echo=TRUE}
+sel     <- c(TRUE, TRUE, TRUE, TRUE, FALSE)
+sel
+!sel
+```
+
+Comparison operators (`>`, `<`, `<=`, `>=`, `==`, `!=`) produce logical
+vectors:
+
+```{r eval=FALSE, echo=TRUE}
+samples <- c(1, 1, 2, 5, 7)
+samples > 2
+which(samples == 7)
+which(samples != 1)
+```
+
+
+## Logical vectors
+
+Logical vectors can be used to access elements:
+
+```{r eval=FALSE,echo=TRUE}
+persons <- c("Aphrodite", "Bacchus", "Circe", "Demeter", "Eurypides")
+sel     <- c(TRUE, TRUE, TRUE, TRUE, FALSE)
+persons[sel]
+
+# we can abbreviate the TRUE and FALSE to T and F (avoid)
+greek <- persons[ c(T, F, T, T, T) ]
+```
+
+
+
+## Exercise 2.3: more on vectors and functions, introducing NA
+
+Create a vector as follows:
+
+
+```{r echo=TRUE,eval=FALSE}
+samples <- c(1, 10, NA, 15)
+```
+
+`NA` stands for `not available` (e.g., missing data)
+
+ * try adding a number to that vector
+ * what does `length(samples)` return?
+ * what does `mean(samples)` return? Why is that?
+ * use the **named parameter** `na.rm=TRUE` for the `mean()` function. Look
+   up help (`?mean`) to see how it can be used. What happens now?
+ * what does the `is.na()` function return when applied to `samples`?
+ * how do you find `NA` values? Use `is.na` and `which`
+ * How do you select only these samples which are not `NA`?
+
+
+
+## Extra (if you are bored): Creating a function
+
+The reason we are showing how to create a function is to show you that it
+is simple, and also because it will help you understand what functions are.
+
+```{r eval=FALSE,echo=TRUE}
+#' Function name
+#' Function description
+some_name <- function(param1, param2=2) {
+
+## code comment
+# <your code goes in here>
+
+}
+```
+
+ * If you have to write something more than twice, you might want to turn it into
    a function!
- * R is a *functional* language
+ * R is a *functional* language:
+    * almost everything is a function
+    * functions usually take something and return a value; they are **not**
+      supposed to use or modify anything that they have not been passed to
+      explicitely (sometimes hard to avoid)
 
 
-## Example
+# Complex data structures
 
-```{r eval=FALSE,echo=TRUE}
+## Main data representations in R
 
-#' Function for pond calculation
-pond_surface_covered <- function(init_pond_surface, day=0) {
-
-  ## "**" and "^" do the same thing
-  ret <- init_pond_surface * 2^day
-
-  return(ret)
-}
-```
-
-
-## Example
-
-
-```{r eval=FALSE,echo=TRUE}
-
-#' Generate a random sample from a given distribution
-#' Usage: randsamp(n) where n is the size of the sample
-
-randsamp <- function(n, d="uniform") {
-
-  if(d == "uniform") {
-    ret <- runif(n)
-  } else if(d == "normal") {
-    ret <- rnorm(n)
-  } else {
-    stop("I don't know this distribution!")
-  }
-
-  return(ret)
-}
-```
-
-## Exercise 2.3
-
-Take the function above and add a new option: the binomial distribution.
-Which function can give you that? Search for a suitable function.
-
-Note: binomial distribution is essentially what you get when you throw a
-coin a number of times and add the results (1 for heads, 0 for tails). 
-This function requires two more parameters: number of "coin tosses"
-and probability of "heads". You need to adapt the code accordingly: choose
-something meaningful, e.g. size=1 and prob=0.5 to simulate a single fair
-coin toss.
-
-**Additional exercise:** Compare the distributions using plot(density(x)),
-where x is the output of your function.
-
+ * vectors (string, number, integer, logic, factor)
+ * matrices and arrays
+ * lists
+ * data frames
 
 ## Data matrices
 
