@@ -32,11 +32,11 @@ knitr::opts_chunk$set(echo=FALSE,warning=FALSE,message=FALSE,fig.width=5,fig.hei
 ## The Team
 
 
-![](images/team.png){ height=400px }
+![](images/team_112021.png){ height=400px }
 
 ## Getting to know you
 
-![](images/courseMember_202209.png){ height=400px }
+![](images/courseMember_202303.png){ height=400px }
 
 ## Aims
 
@@ -56,9 +56,9 @@ knitr::opts_chunk$set(echo=FALSE,warning=FALSE,message=FALSE,fig.width=5,fig.hei
 
 ## Course files
 
-Course repository: https://github.com/bihealth/Rcrashcourse2021
+Course repository: https://github.com/bihealth/Rcrashcourse2023
 
-Course pages (for viewing lectures): https://bihealth.github.io/RcrashCourse2021/
+Course pages (for viewing lectures): https://bihealth.github.io/RcrashCourse2023/
 
 To view the lectures, click on the link or download the HTML file and open it in a browser.
 
