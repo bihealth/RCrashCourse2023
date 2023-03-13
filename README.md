@@ -17,12 +17,7 @@ To view HTML files, use the following links:
 ## Lectures
 
  * [Lecture 1](https://bihealth.github.io/RCrashCourse2023/Lectures/lecture_01.html) 
- * [Lecture 2](https://bihealth.github.io/RCrashCourse2023/Lectures/lecture_02.html) 
- * [Lecture 3](https://bihealth.github.io/RCrashCourse2023/Lectures/lecture_03.html)
- * [Lecture 4](https://bihealth.github.io/RCrashCourse2023/Lectures/lecture_04.html)
- * [Lecture 5](https://bihealth.github.io/RCrashCourse2023/Lectures/lecture_05.html)
  
-
 ## Scripts from the Course 
 
 The scripts with analysis for each day are provided in the folder Scripts/ . They contain commands discussed during the lectures and example solutions for the exercises.
@@ -40,7 +35,7 @@ The scripts with analysis for each day are provided in the folder Scripts/ . The
 
 **Advanced:** Cloning the repository using Rstudio.
 
-All course materials are on the website [https://github.com/bihealth/RcrashCourse2021/](https://github.com/bihealth/RcrashCourse2021/). 
+All course materials are on the website [https://github.com/bihealth/RcrashCourse2023/](https://github.com/bihealth/RcrashCourse2023/). 
 This webpage is a *repository*. Instead of downloading the materials one by
 one, you can make a perfect copy locally (which is called "cloning") and
 update it (semi-)automatically when anything changes.
@@ -52,7 +47,7 @@ First, install git (follow the instructions
 [here](https://support.rstudio.com/hc/en-us/articles/200532077?version=2022.07.1%2B554&mode=desktop)).
 
 Once git is installed, open Rstudio, select File -> New Project, then choose "Version
-control", "Git", and enter "https://github.com/bihealth/RcrashCourse2021/"
+control", "Git", and enter "https://github.com/bihealth/RcrashCourse2023/"
 as the repository URL. Select a directory where you would like to clone the
 repository, and click the "Create repository" button. Rstudio will download
 all course materials.
