@@ -228,7 +228,23 @@ m[   , "b"]  # one column
  * **REMEMBER:** Vectors and matrices **always** have only one data type
    (string, integer etc.)
 
-## Demonstration
+## Exercise 2.4: Matrices - accessing and changing elements
+
+Assume you have a 48 well-plate for a drug sensitivity analysis with viability scores.
+
+- Create a 6x8 matrix "drugSensitivity" with random numbers between 0 and 1. Use `matrix` and `runiform`. These reflect your viability scores.
+
+Before starting you experiment, you decided to leave out the border wells to avoid edge effects:
+
+- Change the values of the border elements to NA.
+
+The rows are treated with inhibitor 1 with increasing concentrations (control, low, medium, high). Columns 2 to 4 are treated with inhibitor 2 with increasing concentrations (control, low, high) and column 5 to 7 are treated with inhibitor 3 (same concentrations as inhibitor 2).
+
+- Use row and column names to reflect treatments.
+- What are potential problems of this approach?
+- Select all wells with inhibitor 3.
+- Which wells can be used as negative control?
+- Select only wells with a combination of inhibitor 1 and inhibitor 2.
 
 
 ## Lists {.columns-2}
@@ -289,8 +305,6 @@ class(person)
 
  * You access elements of a list using `[[`, not `[`
  * Lists may have names (set with `names()`), but don't have to
-
-
 
 ## Data frames
 
