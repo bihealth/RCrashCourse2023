@@ -16,10 +16,11 @@ To view HTML files, use the following links:
 
 ## Lectures
 
- * [Lecture 1](https://bihealth.github.io/RCrashCourse2023/Lectures/lecture_01.html) 
+ * [Lecture 1](https://bihealth.github.io/RCrashCourse2023/Lectures/lecture_01.html): working with Rstudio; simple data types; selecting vectors
      * [Video: introduction to working with Rstudio, 11 minutes](https://youtu.be/zWt8BC1UNiQ)
      * [Video: introduction to functions, 5 minutes](https://youtu.be/rnGADz4cuBA)
      * [Video (extra): functions as values, 6 minutes](https://youtu.be/NTnLZQwKhvA)
+ * [Lecture 2](https://bihealth.github.io/RCrashCourse2023/Lectures/lecture_02.html): complex data types (matrices, lists, data frames); reading data; diagnosing data problems
  
 ## Scripts from the Course 
 
