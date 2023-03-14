@@ -21,6 +21,8 @@ To view HTML files, use the following links:
      * [Video: introduction to functions, 5 minutes](https://youtu.be/rnGADz4cuBA)
      * [Video (extra): functions as values, 6 minutes](https://youtu.be/NTnLZQwKhvA)
  * [Lecture 2](https://bihealth.github.io/RCrashCourse2023/Lectures/lecture_02.html): complex data types (matrices, lists, data frames); reading data; diagnosing data problems
+     * [Video: using logical vectors for selecting elements](https://youtu.be/xmeZofFlp78)
+     * [Video: tibbles vs data frames](https://youtu.be/eWu7kvNBpyc)
  
 ## Scripts from the Course 
 
