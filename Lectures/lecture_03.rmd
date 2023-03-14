@@ -83,6 +83,14 @@ class(myiris$Petal.Width)
 summary(myiris$Petal.Width)
 ```
 
+## Diagnosing problems
+
+```{r eval=FALSE,results="markdown"}
+typeof(myiris$Petal.Width)
+class(myiris$Petal.Width)
+summary(myiris$Petal.Width)
+```
+
 Longer explanation: `typeof` returns the so called "storage type", that is
 the very basic type of a value (string, logical, integer, list etc.).
 `class` can be different (more specific). For example, if `mtx` is a matrix
@@ -145,6 +153,8 @@ group != group2
 ## replace all spaces
 group <- gsub(" ", "", group)
 ```
+
+## Substitutions (search & replace)
 
 Notes:
 
@@ -404,8 +414,8 @@ pivot_wider(long, id_cols="subject", names_from="condition", values_from="measur
 
 Convert the following files to long format:
 
- * `iris.tsv`
  * `labresults_wide.csv`
+ * The iris data set (`data(iris)`)
  * `cars.xlsx` (tricky!)
 
 Clean up and convert to long format (what seems to be the problem? How do

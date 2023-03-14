@@ -3354,9 +3354,15 @@ myiris &lt;- read_csv(&quot;../Datasets/iris.csv&quot;)</pre>
 <pre >##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
 ##   0.100   0.300   1.300   1.199   1.800   2.500</pre>
 
+</article></slide><slide class=""><hgroup><h2>Diagnosing problems</h2></hgroup><article  id="diagnosing-problems-2" class="smaller ">
+
+<pre class = 'prettyprint lang-r'>typeof(myiris$Petal.Width)
+class(myiris$Petal.Width)
+summary(myiris$Petal.Width)</pre>
+
 <p>Longer explanation: <code>typeof</code> returns the so called &ldquo;storage type&rdquo;, that is the very basic type of a value (string, logical, integer, list etc.). <code>class</code> can be different (more specific). For example, if <code>mtx</code> is a matrix of numbers, <code>typeof(mtx)</code> is <code>double</code>, and <code>class(mtx)</code> is <code>matrix</code>.</p>
 
-</article></slide><slide class=""><hgroup><h2>Diagnosing problems</h2></hgroup><article  id="diagnosing-problems-2" class="smaller ">
+</article></slide><slide class=""><hgroup><h2>Diagnosing problems</h2></hgroup><article  id="diagnosing-problems-3" class="smaller ">
 
 <ul>
 <li>Use <code>summary</code>, <code>class</code> and <code>typeof</code> functions to find potential problems. This is <strong>not</strong> what we expect:</li>
@@ -3377,7 +3383,7 @@ myiris &lt;- read_csv(&quot;../Datasets/iris.csv&quot;)</pre>
 
 <p>(we use the back ticks because the column name contains a space)</p>
 
-</article></slide><slide class=""><hgroup><h2>Diagnosing problems</h2></hgroup><article  id="diagnosing-problems-3" class="smaller ">
+</article></slide><slide class=""><hgroup><h2>Diagnosing problems</h2></hgroup><article  id="diagnosing-problems-4" class="smaller ">
 
 <ul>
 <li>The colorDF package provides a function called <code>summary_colorDF</code> which can be used to diagnose problems with different flavors of data frames:</li>
@@ -3421,6 +3427,8 @@ group != group2
 
 ## replace all spaces
 group &lt;- gsub(&quot; &quot;, &quot;&quot;, group)</pre>
+
+</article></slide><slide class=""><hgroup><h2>Substitutions (search &amp; replace)</h2></hgroup><article  id="substitutions-search-replace-1" class="smaller ">
 
 <p>Notes:</p>
 
@@ -3667,8 +3675,8 @@ pivot_wider(long, id_cols=&quot;subject&quot;, names_from=&quot;condition&quot;,
 <p>Convert the following files to long format:</p>
 
 <ul>
-<li><code>iris.tsv</code></li>
 <li><code>labresults_wide.csv</code></li>
+<li>The iris data set (<code>data(iris)</code>)</li>
 <li><code>cars.xlsx</code> (tricky!)</li>
 </ul>
 
