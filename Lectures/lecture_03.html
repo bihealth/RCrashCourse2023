@@ -25,7 +25,7 @@
         usePrettify: true,
         enableSlideAreas: true,
         enableTouch: true,
-                        favIcon: 'files\logo_bihealth_en.png',
+                        favIcon: 'files/logo_bihealth_en.png',
               },
 
       // Author information
@@ -3416,7 +3416,8 @@ summary_colorDF(myiris)</pre>
 </ul>
 
 <pre class = 'prettyprint lang-r'>## Clearly broken!
-group &lt;- c(&quot;ontrol&quot;, &quot;Montrol&quot;, &quot;Kontrol&quot;, &quot;Kkkkkontrl&quot;, &quot;hello Connnnnnntrol&quot;, &quot;oh what a nice day it is, controooool&quot;, &quot;control &quot;, &quot;Control, incoming&quot;)
+group &lt;- c(&quot;ontrol&quot;, &quot;Montrol&quot;, &quot;Kontrol&quot;, &quot;Kkkkkontrl&quot;, &quot;hello Connnnnnntrol&quot;, 
+           &quot;oh what a nice day it is, controooool&quot;, &quot;control &quot;, &quot;Control, incoming&quot;)
 
 ## replace upper-case &quot;Control&quot;
 group2 &lt;- gsub(&quot;[ckCK]+on*tro*l$&quot;, &quot;control&quot;, group)

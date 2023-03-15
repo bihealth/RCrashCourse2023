@@ -141,7 +141,8 @@ summary_colorDF(myiris)
 
 ```{r}
 ## Clearly broken!
-group <- c("ontrol", "Montrol", "Kontrol", "Kkkkkontrl", "hello Connnnnnntrol", "oh what a nice day it is, controooool", "control ", "Control, incoming")
+group <- c("ontrol", "Montrol", "Kontrol", "Kkkkkontrl", "hello Connnnnnntrol", 
+           "oh what a nice day it is, controooool", "control ", "Control, incoming")
 
 ## replace upper-case "Control"
 group2 <- gsub("[ckCK]+on*tro*l$", "control", group)
