@@ -246,7 +246,6 @@ The rows are treated with inhibitor 1 with increasing concentrations (control, l
 - Which wells can be used as negative control?
 - Select only wells with a combination of inhibitor 1 and inhibitor 2.
 
-
 ## Lists {.columns-2}
 
 ![](images/clothesline.png){ height=400px }
