@@ -293,14 +293,12 @@ vec <- gsub("S*chicken", "Chicken", vec)
 
 ## Exercise 3.1
 
-
- * What regular expression matches all of the ankyrin repeat genes (but not other genes) in the following vector: `c("ANKRD22", "ANKEN", "ank.rep.domain 12", "ifng-1", "ANKRD-33", "  ankrd23", "MAPK)`
- * Use gsub in the above vector to replace all occurences of "ANKRD"   
  * Use gsub to make the following uniform: `c("male", "Male ", "M", "F", "female", " Female")`
  * Using `gsub` and the `toupper` function, clean up the gene names such
    that they conform to the HGNC (all capital
    letters, no spaces, no dashes): `c("ankrd22", "ifng", "Nf-kb", " Cxcl 5", "CCL 6.", "ANK.r.d. 12")`
-
+ * What regular expression matches all of the ankyrin repeat genes (but not other genes) in the following vector: `c("ANKRD22", "ANKEN", "ank.rep.domain 12", "ifng-1", "ANKRD-33", "  ankrd23", "MAPK)`
+ 
 
 ## Using regular expressions to clean tables 
 
