@@ -232,7 +232,7 @@ m[   , "b"]  # one column
 
 Assume you have a 48 well-plate for a drug sensitivity analysis with viability scores.
 
-- Create a 6x8 matrix "drugSensitivity" with random numbers between 0 and 1. Use `matrix` and `runiform`. These reflect your viability scores.
+- Create a 6x8 matrix "drugSensitivity" with random numbers between 0 and 1. Use `matrix` and `runif`. These reflect your viability scores.
 
 Before starting you experiment, you decided to leave out the border wells to avoid edge effects:
 
@@ -361,7 +361,7 @@ vectors can hold only one type of data.
  * In tibble, you always get a smaller tibble.
 
 
-## Exercise 2.4
+## Exercise 2.5
 
  * Create a 5x3 matrix with random numbers. Use `matrix` and `rnorm`.
  * Turn the matrix into a data frame. Use `as.data.frame` for that.
@@ -423,7 +423,7 @@ Note: there are also "base R" functions `read.table`, `read.csv`,
 tidyverse functions above are preferable.
 
 
-## Excercise 2.5
+## Excercise 2.6
 
 Read, inspect the following files:
 
