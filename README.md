@@ -26,6 +26,7 @@ To view HTML files, use the following links:
  * [Lecture 3](https://bihealth.github.io/RCrashCourse2023/Lectures/lecture_03.html): Reading and cleaning data; reshaping data frames
      * [Video: wide vs long format, 9 minutes](https://youtu.be/NO1gaeJ7wtA)
      * [Video: converting from wide to long, 6 minutes](https://youtu.be/v5Y_yrnkWIU)
+     * [Video: converting from long to wide, 4 minutes](https://youtu.be/jN0CI62WKs8)
  * [Lecture 4](https://bihealth.github.io/RCrashCourse2023/Lectures/lecture_04.html): Searching in data; combining data frames
  
 ## Scripts from the Course 
