@@ -347,6 +347,13 @@ Some SQL terminology:
  * left outer join: same, but only for the first set
  * right outer join: same, but only for the second set
 
+## Merging: create example data frames
+
+```{r}
+df1 <- data.frame(ID=sample(letters, 15), value1=rnorm(15))
+df2 <- data.frame(ID=sample(letters, 15), value2=rnorm(15))
+```
+
 
 ## Merging (cont.)
 
