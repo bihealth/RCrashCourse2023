@@ -133,7 +133,7 @@ has two effects:
 ## read the transcriptomic results data set
 res <- read.csv("Datasets/transcriptomics_results.csv")
 
-## only interesting columns
+## only a few interesting columns
 res <- res[ , c(3, 5, 8:9) ]
 colnames(res) <- c("Gene", "Description", "LFC", "p.value")
 ```
@@ -168,32 +168,6 @@ plot(abs(res$LFC[1:250]), type="b")
 plot(res$p.value[1:250], type="b", log="y")
 ```
 
-## Plot with LOESS smoothing
-
-```{r, eval=FALSE}
-lo <- loess.smooth(1:500, abs(res$LFC[1:500]))
-plot(abs(res$LFC[1:500]), col="grey", type="b", bty="n",
-  ylab="Log2 fold change")
-lines(lo$x, lo$y)
-```
-
-## Plot with LOESS smoothing
-
-```{r, eval=TRUE,echo=FALSE,fig.width=7,fig.height=5}
-## with echo=FALSE, this code does not show on presentation
-## otherwise the figure does not fit!
-ord <- order(abs(res$LFC), decreasing=TRUE)
-res <- res[ord, ]
-ord <- order(res$p.value)
-res <- res[ord, ]
-
-lo <- loess.smooth(1:500, abs(res$LFC[1:500]))
-plot(abs(res$LFC[1:500]), col="grey", type="b", bty="n",
-  ylab="Log2 fold change")
-lines(lo$x, lo$y)
-
-```
-
 ## Selecting / filtering of data frames
 
 There are two ways, both simple. In both of them, you need to have a
@@ -213,10 +187,12 @@ filter(res, p.value < 0.05)
 ## Excercise 4.1
 
  * Load the example transcriptomic data (`transcriptomics_results.csv`)
+ * Inspect the data frame. 
+   * `qval` stands for false discovery rate (p-value corrected with Benjamini-Hochberg method)
+   * `logFC` is log~2~ fold change
+   * `D0`..`D3` is day 0 to day 3
  * Try sorting of the data frame; by gene name, by identifier, by log fold
    change, by absolute log fold change (you can use any method)
- * Create a data frame which contains only genes which have significant
-   differences at p < 0.05 and abs(log2FC) > 1.5.
  * How many genes are significantly down-regulated?
  * Order the new data frame by Gene name (A-Z)
 
@@ -232,19 +208,6 @@ interferon <- c("TAP1","IFIH1","IRF7","PARP9","STAT1","PLSCR1",
 sel <- res$Gene %in% interferon
 res[ sel, ] ## or: filter(res, Gene %in% interferon)
 ```
-
-## `match()`
-
-We can also use match, which for each element of one vector returns the
-position of that element in the second vector:
-
-```{r}
-matches <- match(interferon, res$Gene)
-res[matches, ]
-```
-
-Note however that `match()` looks for the *first* occurence of a match,
-whereas `%in%` will return all matches.
 
 
 ## Searching for patterns
@@ -295,10 +258,46 @@ a <- c("ID-1-2020", "ID-3-2019", "ABC-4-2018")
 gsub(".*-(.*)-.*", "\\1", a)
 ```
 
+## Logical operators `&` and `|`
+
+Logical vectors can be combined using the logical operators `&` ("and"),
+`|` ("or").
+
+
+```{r}
+l1 <- c(TRUE, TRUE)
+l2 <- c(FALSE, TRUE)
+l3 <- c(TRUE, FALSE)
+l4 <- c(FALSE, FALSE)
+
+l2 | l3
+l2 & l3
+l1 & l2
+l1 | l4
+```
+
+## Combining logical vectors
+
+We can use the logical vectors to select rows from a data frame, and with
+the logical operators, we can combine conditions.
+
+For example: show only significant (qval < 0.01) and up-regulated (log~2~
+fold change > 0) genes:
+
+```{r}
+sel <- res$p.value < 0.01 & res$LFC > 0
+head(res[ sel, ])
+```
+
+*Note: for long data frames, `head` shows only the first 6 rows.`*
+
+
+
 ## Combining searches
 
-We can use the logical operators (`&` and `|`) to combine searches. Thus,
-we use `grepl()` rather than `grep()`.
+We can also use the logical operators (`&` and `|`) to combine searches.
+For this, we use `grepl()` rather than `grep()`. `grep()` returns a vector
+of indices, while `grepl()` returns a vector of logical values.
 
 ```{r}
 sel <- res$Gene %in% interferon
@@ -308,9 +307,14 @@ sel <- sel & significant
 res[sel, ] ## or: filter(res, sel)
 ```
 
+*Note: More on the `filter()` function and other tidyverse functions later.`*
 
 ## Excercise 4.2
 
+Continue with the data frame from exercise 4.1
+
+ * Create a data frame which contains only genes which have significant
+   differences at qval < 0.05 and abs(log2FC) > 1.5.
  * Search for ribosomal genes. How many did you find?
  * Create a data frame which contains only genes that are not "Other" or
    "Unknown".
@@ -329,20 +333,6 @@ set2 <- letters[3:7]
 intersect(set1, set2)
 ```
 
-
-## Finding common IDs cont.
-
-
-```{r}
-df1 <- data.frame(ID=sample(letters, 15), value1=rnorm(15))
-df2 <- data.frame(ID=sample(letters, 15), value2=rnorm(15))
-common <- intersect(df1$ID, df2$ID)
-
-df1[ match(common, df1$ID), ]
-df2[ match(common, df2$ID), ]
-
-cbind(df1[ match(common, df1$ID), ], df2[ match(common, df2$ID), ])
-```
 
 ## Merging
 
