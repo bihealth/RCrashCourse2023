@@ -1,7 +1,13 @@
 ---
 title: "Short report"
-output: html_document
+output: 
+  html_document:
+    toc: true
+    toc_depth: 2
+    fig_caption: true
 date: "2023-03-17"
+editor_options: 
+  chunk_output_type: console
 ---
 
 ```{r setup, include=FALSE}
@@ -21,6 +27,7 @@ library(tidyverse)
 library(readxl)
 library(colorDF)
 library(janitor)
+library(DT)
 ```
 
 reading in data
@@ -42,8 +49,31 @@ ggplot(data, aes(x = vaf_tumor2, y = vaf_organoid2, color = patient_pseudonym)) 
 ```{r}
 data %>% 
   pivot_longer(cols = c(vaf_tumor2, vaf_organoid2), names_to = "model") %>% 
-  ggplot(aes(x = patient_pseudonym, y = new_gene, fill = value, group = model)) + 
+  ggplot(aes(y = patient_pseudonym, x = new_gene, fill = value, group = model)) + 
   geom_tile(position = "dodge") +
   scale_fill_gradient(low = "white", high = "black") + 
-  theme_minimal()
+  theme_minimal() + 
+  theme(axis.text.x = element_text(angle = 90))
+```
+
+```{r}
+data %>% 
+  rename(gene = new_gene) %>% 
+  datatable()
+```
+
+```{r plot-data, fig.cap="This is the great plot we wanted"}
+data %>% 
+  pivot_longer(cols = c(vaf_tumor2, vaf_organoid2), names_to = "model") %>% 
+  mutate(patient_pseudonym = factor(patient_pseudonym, levels= c("LO9", "LO12", "LO17", "LO18"))) %>% 
+  ggplot(aes(y = model, x = new_gene, fill = value)) + 
+  geom_tile() +
+  facet_wrap(~patient_pseudonym, ncol = 1, strip.position = "right") +
+  scale_fill_gradient(low = "white", high = "black") +
+  scale_y_discrete(labels=c("vaf_tumor2" = "tumor", "vaf_organoid2" = "organoid")) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90),
+        panel.spacing = unit(0, "pt"),
+        axis.title = element_text(size = 16))
+
 ```
