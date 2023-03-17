@@ -1,0 +1,39 @@
+---
+title: "Common problems when installing"
+author: ""
+date: "`r Sys.Date()`"
+output:
+  word_document:
+    reference_docx: templates/template.docx
+  pdf_document:
+    latex_engine: xelatex
+abstract: |
+
+toc: no
+bibliography: rmarkdown.bib
+link-citations: true
+csl: templates/nature-medicine.csl
+---
+
+```{r,echo=FALSE}
+## Set default options for the knitr RMD processing
+knitr::opts_chunk$set(echo=FALSE,warning=FALSE,message=FALSE,fig.width=5,fig.height=5,cache=TRUE,autodep=TRUE, results="hide")
+```
+
+# `package X not available for version...`
+
+ * Possibly, you have no internet connection and your
+   computer cannot connect to CRAN. 
+     
+     * Check your internet connection
+
+ * **The connection may be problematic because of the Charite firewall.**
+   If you have internet connection, but your R reports that you cannot
+   connect to CRAN, the cause may be the Charite firewall.
+
+     * Change proxy settings as follows:
+
+ * The binary packages for your version of R are not yet available.
+
+     * Use `install.packages("nnnn", type="binary")`, where "nnnn" is the
+       name of your package. For example, `install.packages("tidyverse", type="binary")
