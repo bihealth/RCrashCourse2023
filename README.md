@@ -30,6 +30,7 @@ To view HTML files, use the following links:
  * [Lecture 4](https://bihealth.github.io/RCrashCourse2023/Lectures/lecture_04.html): Searching in data; combining data frames
  * [Lecture 5](https://bihealth.github.io/RCrashCourse2023/Lectures/lecture_05.html): Visualisations, rmarkdown
      * [Video: ggplot2 vs base R, 6 min](https://youtu.be/NnxJyCHrUTE)
+     * [Video: introduction R markdown, 15 min](https://youtu.be/vBeGakSENi8)
      * [Visualisations: example Rmarkdown document](https://bihealth.github.io/RCrashCourse2023/Lectures/visualisations.html)
 
 
