@@ -1,0 +1,49 @@
+---
+title: "Short report"
+output: html_document
+date: "2023-03-17"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+```
+
+## Introduction
+
+Idea of developing lung organoids.
+
+## Methods
+
+Load libraries
+
+```{r}
+library(tidyverse)
+library(readxl)
+library(colorDF)
+library(janitor)
+```
+
+reading in data
+
+```{r}
+data <- read_csv("Datasets/exampleMutationalData.csv")
+```
+
+create beautiful plots:
+
+```{r}
+ggplot(data, aes(x = vaf_tumor2, y = vaf_organoid2, color = patient_pseudonym)) + 
+  geom_point(size=4) +
+  theme_classic() + 
+  scale_color_viridis_d()
+
+```
+
+```{r}
+data %>% 
+  pivot_longer(cols = c(vaf_tumor2, vaf_organoid2), names_to = "model") %>% 
+  ggplot(aes(x = patient_pseudonym, y = new_gene, fill = value, group = model)) + 
+  geom_tile(position = "dodge") +
+  scale_fill_gradient(low = "white", high = "black") + 
+  theme_minimal()
+```
