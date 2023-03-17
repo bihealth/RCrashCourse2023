@@ -90,7 +90,7 @@ beeswarm(data ~ labs, pch=19, col="#33333333", add=TRUE)
 Very often, you see the following incorrect representation of the data:
 
 
-```{r}
+```{r eval=TRUE}
 bp <- barplot(means, ylim=c(0, 21), space=.9)
 ebar(bp[,1], means, ses, width=.6)
 ```
@@ -126,14 +126,33 @@ p1 <- ggplot(df, aes(y=data, group=labs)) + geom_boxplot()
 p2 <- ggplot(df, aes(x=labs, y=data, group=labs)) + geom_beeswarm()
 p3 <- ggplot(df, aes(x=labs, y=data, group=labs)) + geom_violin() +
   geom_boxplot(width=0.1)
+plot_grid(p1, p2, p3, nrow=1, labels=LETTERS[1:3])
+```
+
+Note: we achieved to get three plots labeled on one figure using the `plot_grid`
+function from the `cowplot` package. Also note that ggplot plots can be
+saved to a variable. They are only shown on screen when printed.
+
+Let us set the ggplot theme to "minimal", so the plots are a bit nicer:
+
+
+```{r}
+theme_set(theme_minimal())
 plot_grid(p1, p2, p3, nrow=1)
 ```
+
 
 
 # Bar plots
 
 Bar plots are useful when you have proportion data. For example, you want
 to change how the fraction of mutants in your population changes with time.
+
+Bar plots are suitable for frequency data or if you have numbers (total
+numbers of something), but not for other data types. Specifically, using
+them to show the results of QPCR (fold changes / log fold changes /
+$\Delta\Delta$ values) is incorrect.
+
 First, we will generate some random data for three time points.
 
 You do not need to inspect the code below, but feel free to do it.
@@ -154,8 +173,9 @@ barplot(fraction ~ strain + time_point, data=df)
 ggplot2:
 
 
-```{r}
-
+```{r eval=TRUE}
+ggplot(df, aes(x=time_point, y=fraction, fill=strain)) +
+  geom_bar(stat="identity")
 ```
 
 
@@ -186,6 +206,28 @@ plot(mtcars$hp, mtcars$mpg)
 abline(mod1)
 ```
 
+In ggplot2: 
+
+
+```{r eval=TRUE}
+ggplot(mtcars, aes(x=hp, y=mpg)) + geom_point() +
+  geom_abline(intercept=mod1$coefficients[1], slope=mod1$coefficients[2])
+```
+
+Alternatively, we can directly fit the regression model in ggplot:
+
+
+```{r eval=TRUE}
+ggplot(mtcars, aes(x=hp, y=mpg)) + 
+  geom_point() +
+  geom_smooth(method="lm")
+```
+
+Above, you have already the regression confidence intervals.
+
+
+
+
 
 ## Comparing models 
 
@@ -210,7 +252,8 @@ BIC(mod1, mod2, mod.l)
 
 Confidence intervals tell us how well we have estimated the relationship.
 Prediction intervals tell us how well we can predict new data points using
-this model.
+this model. Below, we calculate the regression confidence and prediction
+intervals manually.
 
 ```{r}
 mod <- lm(mpg ~ log(hp), data=mtcars)
@@ -229,44 +272,56 @@ lines(xnew, pr[,3], lty=2) # upper prediction
 
 ## Plotting linear regression (cont.)
 
+First, we create the prediction and confidence interval data frames:
+
 ```{r,eval=TRUE,echo=FALSE,fig.width=6,fig.height=5}
 mod <- lm(mpg ~ log(hp), data=mtcars)
 xnew <- 50:350
 plot(mtcars$hp, mtcars$mpg, log="x", xlab="HP",
   ylab="MPG", bty="n")
 ci <- predict(mod, newdata=data.frame(hp=xnew), interval="conf")
-lines(xnew, ci[,1], lwd=2) # fit
-lines(xnew, ci[,2]) # lower CI
-lines(xnew, ci[,3]) # upper CI
+ci <- data.frame(hp=xnew, ci)
+lines(ci$hp, ci$fit, lwd=2) # fit
+lines(ci$hp, ci$lwr) # lower CI
+lines(ci$hp, ci$upr) # upper CI
 pr <- predict(mod, newdata=data.frame(hp=xnew), interval="pred")
-lines(xnew, pr[,2], lty=2) # lower prediction
-lines(xnew, pr[,3], lty=2) # upper prediction
+pr <- data.frame(hp=xnew, pr)
+lines(pr$hp, pr$lwr, lty=2) # lower prediction
+lines(pr$hp, pr$upr, lty=2) # upper prediction
 ```
 
 
-## Plotting linear regression cont.
+Now with a nicer colors (using polygons):
 
 ```{r, eval=TRUE}
 plot(NULL, xlim=c(50,350), ylim=c(5,45), log="x", xlab="HP",
   ylab="MPG", bty="n")
-x2 <- c(xnew, rev(xnew))
-polygon(x2, c(pr[,2], rev(pr[,3])), col="#FF330033", border=NA)
-polygon(x2, c(ci[,2], rev(ci[,3])), col="#FF330033", border=NA)
-lines(xnew, ci[,1], col="#FF3300", lwd=2) # fit
+x2 <- c(ci$hp, rev(ci$hp))
+polygon(x2, c(pr$lwr, rev(pr$upr)), col="#FF330033", border=NA)
+polygon(x2, c(ci$lwr, rev(ci$upr)), col="#FF330033", border=NA)
+lines(ci$hp, ci$fit, col="#FF3300", lwd=2) # fit
 points(mtcars$hp, mtcars$mpg, pch=19, cex=1.3, col="#99110033")
 ```
 
 
-## Plotting linear regression cont.
+## Plotting the intervals in ggplot2
 
-```{r,echo=FALSE,eval=TRUE,fig.width=7,fig.height=5}
-plot(NULL, xlim=c(50,350), ylim=c(5,45), log="x", xlab="HP",
-  ylab="MPG", bty="n")
-x2 <- c(xnew, rev(xnew))
-polygon(x2, c(pr[,2], rev(pr[,3])), col="#FF330033", border=NA)
-polygon(x2, c(ci[,2], rev(ci[,3])), col="#FF330033", border=NA)
-lines(xnew, ci[,1], col="#FF3300", lwd=2) # fit
-points(mtcars$hp, mtcars$mpg, pch=19, cex=1.3, col="#991100")
+The ggplot2 `geom_smooth` is capable of calculating automatically the
+confidence intervals, but it does not do the prediction intervals which are
+very often more interesting. To include them, we need to manually add a
+corresponding polygon.
+
+To use a logarithmic scale, we include the `scale_x_log10`.
+
+```{r eval=TRUE}
+ggplot(mtcars, aes(x=hp, y=mpg)) +
+  scale_x_log10() +
+  geom_ribbon(data=pr, aes(x=hp, y=fit, ymin=lwr, ymax=upr),
+              fill="lightgrey", alpha=.4) +
+  geom_point() +
+  geom_smooth(method="lm")
+
+
 ```
 
 
@@ -348,42 +403,6 @@ pal <- colorRampPalette(c("cyan", "black", "purple"))
 heatmap.2(mtx, trace="n", scale="n", dendrogram="c", 
   Rowv=FALSE, col=pal,
   breaks=seq(-2, 2, length.out=15) )
-```
-
-
-
-# Simple clustering
-
-## Hierarchical clustering
-
-```{r eval=TRUE}
-data(iris)
-mtx <- data.matrix(iris[,1:4])
-mtx <- scale(mtx)
-group <- factor(iris[,5])
-
-dd <- dist(mtx)
-tree <- hclust(dd)
-cl <- cutree(tree, k=3)
-table(cl, group)
-```
-
-## K-means clustering
-
-```{r eval=TRUE}
-n.cl <- 3
-km <- kmeans(mtx, n.cl)
-table(km$cluster, group)
-pal <- brewer.pal(n=n.cl, name="Dark2")
-```
-
-##
-
-```{r eval=TRUE,fig.width=7,fig.height=6}
-plot(mtx[,1], mtx[,2], col=pal[km$cluster], pch=c(15,17,19)[factor(iris[,5])], bty="n")
-points(km$centers[,1], km$centers[,2], pch=19, cex=4, col="#99999966")
-text(km$centers[,1], km$centers[,2], 1:n.cl, cex=2, col=pal)
-legend("topright", levels(group), pch=c(15,17,19), cex=1.5, bty="n")
 ```
 
 
