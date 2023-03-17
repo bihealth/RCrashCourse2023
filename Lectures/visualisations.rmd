@@ -1,0 +1,391 @@
+---
+title: "Visualisations"
+author: ""
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    code_fold: hide
+    toc: false
+---
+
+```{r,echo=FALSE,warning=FALSE,message=FALSE}
+## Set default options for the knitr RMD processing
+knitr::opts_chunk$set(echo=TRUE,eval=FALSE,warning=FALSE,message=FALSE,fig.width=5,fig.height=5,cache=TRUE,autodep=TRUE, results="hide")
+require(readxl)
+require(beeswarm)
+require(tidyr)
+require(vioplot)
+require(RColorBrewer)
+require(cowplot)
+require(ggplot2)
+require(ggbeeswarm)
+```
+
+# SD, SEM and different plot types
+
+## SD vs SEM
+
+Standard deviation is defined as
+
+$$\sigma = \sqrt{\frac{\sum_{i=0}^n (x_i - \overline{x})^2}{n - 1}}$$
+
+Standard error of the mean (SEM) is defined as
+
+$$\sigma_{M} = \frac{\sigma}{\sqrt{n}}$$
+
+Usually, when we increase the sample size, $\sigma$ remains more or less
+the same, but $\sigma_M$ decreases. Therefore, SEM is not a good measure of
+variation in population. 
+
+Below, we generate four samples with four different sizes. We use normal
+distrubtion with mean = 20 and standard deviation = 1.
+
+```{r,eval=TRUE}
+
+## generate mock data sets with different sample sizes
+ns <- c(10, 50, 100, 500)
+data <- rnorm(sum(ns), mean=20)
+## repeat "a" 10 times, "b" 50 times, etc.
+labs <- unlist(lapply(1:length(ns), 
+  function(i) rep(letters[i], ns[i])))
+
+## calculate means, SD and SEM
+means <- tapply(data, labs, mean)
+sds <- tapply(data, labs, sd)
+ses <- sds/sqrt(ns)
+```
+
+```{r eval=TRUE}
+ebar <- function(x, y, sd, width=1, ...) {
+  w <- width/2
+
+  segments(x, y, x, y + sd, ...)
+  segments(x - w, y + sd, x + w, y + sd, ...)
+}
+```
+
+
+
+## SD vs SEM (cont.)
+
+The plot below shows that while SE remains the same, SEM decreases with
+sample size. Do not worry about the code below; here, the important message
+is only the figure (this is an example of a figure which would not be
+entirely straightforward to achieve in ggplot2).
+
+```{r,echo=FALSE,eval=TRUE,fig.width=7,fig.height=5}
+x <- (1:length(ns))-.3 # for plotting
+
+plot(NULL, xlim=c(.5, length(ns) + .5), ylim=c(15, 25), bty="n", xlab="", ylab="")
+## means
+abline(h=20, col="grey")
+abline(h=c(19,21), col="grey", lty=2)
+segments(x, tapply(data, labs, mean), x+.6, tapply(data, labs, mean), lwd=2)
+
+rect(x + .1, means-sds, x + .5, means + sds, col="#00999933")
+rect(x, means-ses, x + .6, means + ses, col="#00FFFF33")
+beeswarm(data ~ labs, pch=19, col="#33333333", add=TRUE)
+```
+
+Very often, you see the following incorrect representation of the data:
+
+
+```{r}
+bp <- barplot(means, ylim=c(0, 21), space=.9)
+ebar(bp[,1], means, ses, width=.6)
+```
+
+(Do not use bar plots for such data! See 
+[Kick the bar char habit](https://www.nature.com/articles/nmeth.2837) for
+details.)
+
+
+This is also why you should not use SEM in your plots. Below are a few correct
+representations of the data:
+
+
+```{r fig.width=12,fig.height=5,eval=TRUE}
+# the line below means: create three plots on one figure
+par(mfrow=c(1,3))
+
+boxplot(data ~ labs)
+beeswarm(data ~ labs)
+vioplot(data ~ labs)
+```
+
+
+And now the ggplot2 versions:
+
+
+
+```{r fig.width=12,fig.height=5,eval=TRUE}
+# ggplot2 requires a data frame with the data
+df <- data.frame(data=data, labs=labs)
+
+p1 <- ggplot(df, aes(y=data, group=labs)) + geom_boxplot()
+p2 <- ggplot(df, aes(x=labs, y=data, group=labs)) + geom_beeswarm()
+p3 <- ggplot(df, aes(x=labs, y=data, group=labs)) + geom_violin() +
+  geom_boxplot(width=0.1)
+plot_grid(p1, p2, p3, nrow=1)
+```
+
+
+# Bar plots
+
+Bar plots are useful when you have proportion data. For example, you want
+to change how the fraction of mutants in your population changes with time.
+First, we will generate some random data for three time points.
+
+You do not need to inspect the code below, but feel free to do it.
+
+```{r eval=TRUE}
+df <- data.frame(time_point=rep(c("t1", "t2", "t3"), each=2),
+                 strain=rep(c("WT", "KO"), 3),
+                 fraction=c(.9, .1, .7, .3, .5, .5))
+print(df)
+```
+
+Base R:
+
+```{r eval=TRUE}
+barplot(fraction ~ strain + time_point, data=df)
+```
+
+ggplot2:
+
+
+```{r}
+
+```
+
+
+
+
+
+# Linear regression
+
+## Calculating linear regression
+
+We use the `mtcars` data set and calculate how fuel consumption (`mpg`)
+depends on the horsepower (`hp`).
+
+```{r,eval=TRUE}
+mod1 <- lm(mpg ~ hp, data=mtcars)
+summary(mod1)
+mod2 <- lm(mpg ~ hp + disp, data=mtcars)
+summary(mod2)
+```
+
+## Plotting linear regression: basic
+
+Plotting mod2 would be less trivial, since we only show one predictor
+variable on the plot, but the model depends on two of them.
+
+```{r eval=TRUE,fig.height=3,fig.width=4}
+plot(mtcars$hp, mtcars$mpg)
+abline(mod1)
+```
+
+
+## Comparing models 
+
+We ask the question whether mod2 is significantly better than mod1. For
+that, we use a simple ANOVA. We also include another model, using log(hp)
+rather than hp, and compare all three using Bayesian Information Criterion.
+Models with a smaller BIC (or lower Akaike Information Criterion, AIC) are
+better.
+
+```{r,eval=TRUE}
+mod1 <- lm(mpg ~ hp, data=mtcars)
+summary(mod1)
+mod2 <- lm(mpg ~ hp + disp, data=mtcars)
+summary(mod2)
+anova(mod1, mod2)
+mod.l <- lm(mpg ~ log(hp), data=mtcars)
+BIC(mod1, mod2, mod.l)
+```
+
+
+## Plotting linear regression
+
+Confidence intervals tell us how well we have estimated the relationship.
+Prediction intervals tell us how well we can predict new data points using
+this model.
+
+```{r}
+mod <- lm(mpg ~ log(hp), data=mtcars)
+xnew <- 50:350
+plot(mtcars$hp, mtcars$mpg, log="x", xlab="HP",
+  ylab="MPG", bty="n")
+ci <- predict(mod, newdata=data.frame(hp=xnew), interval="conf")
+lines(xnew, ci[,1], lwd=2) # fit
+lines(xnew, ci[,2]) # lower CI
+lines(xnew, ci[,3]) # upper CI
+pr <- predict(mod, newdata=data.frame(hp=xnew), interval="pred")
+lines(xnew, pr[,2], lty=2) # lower prediction
+lines(xnew, pr[,3], lty=2) # upper prediction
+```
+
+
+## Plotting linear regression (cont.)
+
+```{r,eval=TRUE,echo=FALSE,fig.width=6,fig.height=5}
+mod <- lm(mpg ~ log(hp), data=mtcars)
+xnew <- 50:350
+plot(mtcars$hp, mtcars$mpg, log="x", xlab="HP",
+  ylab="MPG", bty="n")
+ci <- predict(mod, newdata=data.frame(hp=xnew), interval="conf")
+lines(xnew, ci[,1], lwd=2) # fit
+lines(xnew, ci[,2]) # lower CI
+lines(xnew, ci[,3]) # upper CI
+pr <- predict(mod, newdata=data.frame(hp=xnew), interval="pred")
+lines(xnew, pr[,2], lty=2) # lower prediction
+lines(xnew, pr[,3], lty=2) # upper prediction
+```
+
+
+## Plotting linear regression cont.
+
+```{r, eval=TRUE}
+plot(NULL, xlim=c(50,350), ylim=c(5,45), log="x", xlab="HP",
+  ylab="MPG", bty="n")
+x2 <- c(xnew, rev(xnew))
+polygon(x2, c(pr[,2], rev(pr[,3])), col="#FF330033", border=NA)
+polygon(x2, c(ci[,2], rev(ci[,3])), col="#FF330033", border=NA)
+lines(xnew, ci[,1], col="#FF3300", lwd=2) # fit
+points(mtcars$hp, mtcars$mpg, pch=19, cex=1.3, col="#99110033")
+```
+
+
+## Plotting linear regression cont.
+
+```{r,echo=FALSE,eval=TRUE,fig.width=7,fig.height=5}
+plot(NULL, xlim=c(50,350), ylim=c(5,45), log="x", xlab="HP",
+  ylab="MPG", bty="n")
+x2 <- c(xnew, rev(xnew))
+polygon(x2, c(pr[,2], rev(pr[,3])), col="#FF330033", border=NA)
+polygon(x2, c(ci[,2], rev(ci[,3])), col="#FF330033", border=NA)
+lines(xnew, ci[,1], col="#FF3300", lwd=2) # fit
+points(mtcars$hp, mtcars$mpg, pch=19, cex=1.3, col="#991100")
+```
+
+
+
+
+
+
+# Heatmaps
+
+## loading data
+
+```{r eval=TRUE}
+genes <- read_xlsx("Datasets/expression_data_vaccination_example.xlsx", 
+  sheet=2)
+e <- read_xlsx("Datasets/expression_data_vaccination_example.xlsx", 
+  sheet=3)
+t <- read_xlsx("Datasets/expression_data_vaccination_example.xlsx", 
+  sheet=1)
+res <- read.csv("Datasets/transcriptomics_results.csv")
+
+## res and genes are not identical!
+com <- intersect(genes$ProbeName, res$ProbeName)
+e <- data.matrix(e[ match(com, genes$ProbeName), ])
+genes <- genes[ match(com, genes$ProbeName), ]
+rownames(e) <- genes$GeneName
+res <- res[ match(com, res$ProbeName), ]
+all(res$ProbeName == genes$ProbeName)
+```
+
+
+## Selecting genes to plot on a heatmap
+
+```{r eval=TRUE}
+n <- 25 # top 50
+byqval <- order(res$qval.F.D1)
+sel <- byqval[1:n]
+
+downreg <- which(res$logFC.F.D1 < 0)
+downreg <- byqval[ byqval %in% downreg ][1:n]
+
+sel <- c(sel, downreg)
+
+
+## ordering and selecting columns
+group <- paste0(t$ARM, ".", t$Timepoint)
+csel <- order(group)
+## FLUAD only
+csel <- csel[ csel %in% which(t$ARM == "FLUAD") ] 
+```
+
+## Plotting the heatmap
+
+```{r}
+library(gplots)
+mtx <- t(e[sel, csel])
+
+## scale manually
+mtx <- scale(mtx)
+
+## palette
+pal <- colorRampPalette(c("cyan", "black", "purple"))
+heatmap.2(mtx, trace="n", scale="n", dendrogram="c", 
+  Rowv=FALSE, col=pal,
+  breaks=seq(-2, 2, length.out=15) )
+```
+
+
+## 
+
+```{r,eval=TRUE,echo=FALSE,fig.width=8,fig.height=6}
+library(gplots)
+mtx <- t(e[sel, csel])
+
+## scale manually
+mtx <- scale(mtx)
+
+## palette
+pal <- colorRampPalette(c("cyan", "black", "purple"))
+heatmap.2(mtx, trace="n", scale="n", dendrogram="c", 
+  Rowv=FALSE, col=pal,
+  breaks=seq(-2, 2, length.out=15) )
+```
+
+
+
+# Simple clustering
+
+## Hierarchical clustering
+
+```{r eval=TRUE}
+data(iris)
+mtx <- data.matrix(iris[,1:4])
+mtx <- scale(mtx)
+group <- factor(iris[,5])
+
+dd <- dist(mtx)
+tree <- hclust(dd)
+cl <- cutree(tree, k=3)
+table(cl, group)
+```
+
+## K-means clustering
+
+```{r eval=TRUE}
+n.cl <- 3
+km <- kmeans(mtx, n.cl)
+table(km$cluster, group)
+pal <- brewer.pal(n=n.cl, name="Dark2")
+```
+
+##
+
+```{r eval=TRUE,fig.width=7,fig.height=6}
+plot(mtx[,1], mtx[,2], col=pal[km$cluster], pch=c(15,17,19)[factor(iris[,5])], bty="n")
+points(km$centers[,1], km$centers[,2], pch=19, cex=4, col="#99999966")
+text(km$centers[,1], km$centers[,2], 1:n.cl, cex=2, col=pal)
+legend("topright", levels(group), pch=c(15,17,19), cex=1.5, bty="n")
+```
+
+
+
+

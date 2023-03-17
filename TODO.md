@@ -16,7 +16,11 @@
 
 * Day 4 
 
+ * start with exercises earlier
+
  * use only tidyverse for ordering and filtering? (filter & arrange)
 
  * Merging (cont.) -> figure out a better example
+
+ * give better examples and easier exercise
  
