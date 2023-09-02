@@ -20,22 +20,6 @@ To view HTML files, use the following links:
      * [Video: introduction to working with Rstudio, 11 minutes](https://youtu.be/zWt8BC1UNiQ)
      * [Video: introduction to functions, 5 minutes](https://youtu.be/rnGADz4cuBA)
      * [Video (extra): functions as values, 6 minutes](https://youtu.be/NTnLZQwKhvA)
- * [Lecture 2](https://bihealth.github.io/RCrashCourse2023/Lectures/lecture_02.html): complex data types (matrices, lists, data frames); reading data; diagnosing data problems
-     * [Video: using logical vectors for selecting elements, 8 minutes](https://youtu.be/xmeZofFlp78)
-     * [Video: tibbles vs data frames, 10 minutes](https://youtu.be/eWu7kvNBpyc)
- * [Lecture 3](https://bihealth.github.io/RCrashCourse2023/Lectures/lecture_03.html): Reading and cleaning data; reshaping data frames
-     * [Video: wide vs long format, 9 minutes](https://youtu.be/NO1gaeJ7wtA)
-     * [Video: converting from wide to long, 6 minutes](https://youtu.be/v5Y_yrnkWIU)
-     * [Video: converting from long to wide, 4 minutes](https://youtu.be/jN0CI62WKs8)
- * [Lecture 4](https://bihealth.github.io/RCrashCourse2023/Lectures/lecture_04.html): Searching in data; combining data frames
- * [Lecture 5](https://bihealth.github.io/RCrashCourse2023/Lectures/lecture_05.html): Visualisations, rmarkdown
-     * [Video: ggplot2 vs base R, 6 min](https://youtu.be/NnxJyCHrUTE)
-     * [Video: introduction R markdown, 15 min](https://youtu.be/vBeGakSENi8)
-     * [Video: basic document formatting in Rmarkdown documents, 9 minutes](https://youtu.be/rfMTn4NBDkQ)
-     * [Video: including references in Rmarkdown documents, 7 min](https://youtu.be/DUG1tEL5kXI)
-     * [Visualisations: example Rmarkdown document](https://bihealth.github.io/RCrashCourse2023/Lectures/visualisations.html)
-
-
  
 ## Scripts from the Course 
 
