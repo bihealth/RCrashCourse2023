@@ -25,7 +25,8 @@ knitr::opts_chunk$set(echo=FALSE,warning=FALSE,message=FALSE,fig.width=5,fig.hei
 ## Important links 
 
  * E-mail: `<cubi-teaching@charite.de>` 
- * Github: `https://github.com/bihealth/RcrashCourse2021`
+ * Github: `https://github.com/bihealth/RcrashCourse2023`
+ * Slides: `https://bihealth.github.io/RCrashCourse2023/`
  * Teams
 
 
@@ -36,7 +37,7 @@ knitr::opts_chunk$set(echo=FALSE,warning=FALSE,message=FALSE,fig.width=5,fig.hei
 
 ## Getting to know you
 
-![](images/courseMember_202303.png){ height=400px }
+![](images/courseMember_202309.png){ height=400px }
 
 ## Aims
 
@@ -70,6 +71,16 @@ To view the lectures, click on the link or download the HTML file and open it in
 
 # How to start
 
+## Example R session
+
+`https://youtu.be/zWt8BC1UNiQ`
+
+## The rdesktop workplace
+
+ * Windows
+ * Menus
+ * Workspace
+
 ## Creating a new project
 
  * In Rstudio, go to File -> New Project 
@@ -82,7 +93,18 @@ documents...). You can put anything in this directory.
 It is a very good idea to save all data and meta-data related to your
 project in this directory.
 
-## Example R session
+## Workspaces
+
+ Workspace is basically a folder which contains a few special files in
+ which R stores project-specific data.
+
+  * `Rhistory` (hidden file) – a text file containing all commands that you
+    have issued
+  * `Rdata` (hidden file) – a binary file containing your workspace (all
+    variables created)
+  * `<filename>.Rproj` – Rstudio R project file containing some
+    rstudio-specific settings (text file)
+  * Anything else should be saved by you
 
 
 ## When things don't work...
@@ -98,26 +120,6 @@ project in this directory.
 
  * Google it!
 
-
-
-## The rdesktop workplace
-
- * Windows
- * Menus
- * Workspace
-
-## Workspaces
-
- Workspace is basically a folder which contains a few special files in
- which R stores project-specific data.
-
-  * `Rhistory` (hidden file) – a text file containing all commands that you
-    have issued
-  * `Rdata` (hidden file) – a binary file containing your workspace (all
-    variables created)
-  * `<filename>.Rproj` – Rstudio R project file containing some
-    rstudio-specific settings (text file)
-  * Anything else should be save by you
 
 ## Examples of R applications
 
@@ -200,8 +202,6 @@ This produces a warning message. Should you be worried? What happened?
 
 What does the `length()` function do?
 
-
-
 ## Comment: vectorization
 
 In R, a lot of things are vectors and this is very convenient. 
@@ -245,9 +245,6 @@ f_teachers <- factor(teachers)
 as.numeric(f_teachers)
 as.character(f_teachers)
 ```
-
-
-
 
 
 # Good coding practices
@@ -333,5 +330,9 @@ samples_sd <- sd(samples)
  * Values can be assigned to variables (e.g. `a <- 2`).
  * There are different types of values, including vectors. There are
    numeric, character, logical and factor vectors.
+   
 
 **Demo**
+
+ * `https://youtu.be/rnGADz4cuBA`
+ * `https://youtu.be/NTnLZQwKhvA`
