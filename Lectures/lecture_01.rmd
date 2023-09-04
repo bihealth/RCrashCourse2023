@@ -57,7 +57,7 @@ knitr::opts_chunk$set(echo=FALSE,warning=FALSE,message=FALSE,fig.width=5,fig.hei
 
 ## Course files
 
-Course repository: https://github.com/bihealth/Rcrashcourse2023
+Course repository: https://github.com/bihealth/RCrashCourse2023
 
 Course pages (for viewing lectures): https://bihealth.github.io/RcrashCourse2023/
 
