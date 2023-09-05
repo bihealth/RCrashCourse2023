@@ -23,6 +23,7 @@ knitr::opts_chunk$set(echo=TRUE,eval=FALSE,warning=FALSE,message=FALSE,fig.width
 
 ## Repetitorium of Day 1
 
+
 Questions, anybody?
 
 ## Functions in R: a brief introduction
@@ -102,6 +103,7 @@ persons[sel]
 greek <- persons[ c(T, F, T, T, T) ]
 ```
 
+* `https://youtu.be/xmeZofFlp78`
 
 
 ## Exercise 2.3: more on vectors and functions, introducing NA
@@ -359,6 +361,8 @@ vectors can hold only one type of data.
  * If you select a single row in a data frame, you get a smaller data
    frame. If you select a single column, you get a vector.
  * In tibble, you always get a smaller tibble.
+ 
+ * `https://youtu.be/eWu7kvNBpyc`
 
 
 ## Exercise 2.5
