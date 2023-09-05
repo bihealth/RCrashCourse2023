@@ -6,6 +6,8 @@
 
   add selecting vectors / rows by logical vectors
 
+  maybe skip the matrices and do lists + data frames / tibbles first (
+
 * Day 3: introduce grep first, then gsub
 
  * limit the regular expressions to a minimum
