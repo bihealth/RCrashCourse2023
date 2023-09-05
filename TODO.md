@@ -24,3 +24,12 @@
 
  * give better examples and easier exercise
  
+
+Other
+
+ * Record a video about saving graphics to files
+
+ * check whether all data is necessary (repo too big)
+
+ * tell them to download the datasets before everything else (because the
+   download takes time)
