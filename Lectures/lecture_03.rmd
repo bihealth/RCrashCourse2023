@@ -132,6 +132,14 @@ summary_colorDF(myiris)
  * replace incorrect values (by search and replace)
  * enforcing a particular data type (e.g., converting strings to numbers)
 
+## Using patterns to clean data
+
+ * everything is a character (even numbers)
+ * wildcards (jokers) allow to create patterns
+ * `grep(pattern, string)` is the programming equivalent of `Ctrl F` in Word/Excel
+ * `teachers <- c("January", "Manuela")` 
+ * `grep("an", teachers)` find the string "an" in teachers -> what's the difference when using `grepl`
+ * `grep("^J", teachers)` find the string which starts with a capital J
 
 ## Substitutions (search & replace)
 
@@ -220,6 +228,8 @@ In regular expressions, some characters or strings have special meanings
    a regular expression means "match at the end of a string").
  * A string like `[abc]` will match only a, b and c, but not d. You can use
    ranges, e.g. `[0-9]` or `[a-z]`
+   
+ * https://rstudio.github.io/cheatsheets/regex.pdf
 
 ## Regular expression cont.
 
@@ -307,7 +317,7 @@ vec <- gsub("S*chicken", "Chicken", vec)
 ## Exercise 3.2
 
  * Read the data file `iris.csv` using the `read_csv` function. Spot and correct errors.
- * Read the data file `meta_data_botched.xlsx`. Spot and correct errors.
+ * If you have time: Read the data file `meta_data_botched.xlsx`. Spot and correct errors.
 
 ## Writing data
 
@@ -350,6 +360,10 @@ however, **tidyverse discourages the use of row names** and sometimes even
 removes existing row names on data frames.
 
 ## Wide and Long format (demonstration)
+
+ * https://youtu.be/NO1gaeJ7wtA`
+ * https://youtu.be/v5Y_yrnkWIU
+ * https://youtu.be/jN0CI62WKs8
 
 
 ## Wide and Long format

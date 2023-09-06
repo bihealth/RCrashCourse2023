@@ -25,6 +25,12 @@ To view HTML files, use the following links:
      * [Video: using logical vectors for selecting elements, 8 minutes](https://youtu.be/xmeZofFlp78)
      * [Video: tibbles vs data frames, 10 minutes](https://youtu.be/eWu7kvNBpyc)
  
+ * [Lecture 3](https://bihealth.github.io/RCrashCourse2023/Lectures/lecture_03.html): Reading and cleaning data; reshaping data frames
+     * [Video: wide vs long format, 9 minutes](https://youtu.be/NO1gaeJ7wtA)
+     * [Video: converting from wide to long, 6 minutes](https://youtu.be/v5Y_yrnkWIU)
+     * [Video: converting from long to wide, 4 minutes](https://youtu.be/jN0CI62WKs8)
+
+ 
 ## Scripts from the Course 
 
 The scripts with analysis for each day are provided in the folder Scripts/ . They contain commands discussed during the lectures and example solutions for the exercises.
