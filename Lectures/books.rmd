@@ -27,7 +27,8 @@ Suggested Links:
 
  2. R markdown:
   
-   *  [R markdown definitive guide](https://bookdown.org/yihui/rmarkdown/)
+   * [R markdown definitive guide](https://bookdown.org/yihui/rmarkdown/)
+   * [Tables in Rmarkdown](https://rstudio.github.io/distill/tables.html)
  
  3. Stackexchange:
 
