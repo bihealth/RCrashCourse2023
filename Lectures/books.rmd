@@ -4,7 +4,7 @@ author: "January Weiner"
 output: html_document
 ---
 
-Books which I have shown you during the course:
+Books which might be of interest:
 
  1. R Cookbook by Paul Teetor
 
@@ -21,8 +21,9 @@ Books which I have shown you during the course:
 Suggested Links:
 
  1. Cheat sheets:
-   * [R cheat sheet](https://rstudio.com/wp-content/uploads/2016/10/r-cheat-sheet-3.pdf)
-   * [ggplot2](https://rstudio.com/wp-content/uploads/2016/11/ggplot2-cheatsheet-2.1.pdf)
+   * [R cheat sheet](https://rstudio.github.io/cheatsheets/base-r.pdf)
+   * [RStudio](https://rstudio.github.io/cheatsheets/rstudio-ide.pdf)
+   * [ggplot2](https://rstudio.github.io/cheatsheets/data-visualization.pdf)
 
  2. R markdown:
   
@@ -35,12 +36,13 @@ Suggested Links:
  
  4. [Statistical tools for high throughput data analysis](https://sthda.com)
 
- 5. [R-bloggers](R-bloggers.com)
+ 5. [R-bloggers](https://www.r-bloggers.com/)
  6. [Collection of R-statistics](http://r-statistics.co/)
  7. [R cookbook](http://www.cookbook-r.com/)   
  8. Regular expressions:
     
     * [Test regexp](https://regexr.com)
-    * [R cheat sheet](https://rstudio.com/wp-content/uploads/2016/09/RegExCheatsheet.pdf)
+    * [R cheat sheet](https://rstudio.github.io/cheatsheets/regex.pdf)
     
  9. [R for data science](https://r4ds.had.co.nz)
+ 10. [Style guide](https://style.tidyverse.org/index.html)
