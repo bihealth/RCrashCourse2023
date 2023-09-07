@@ -19,7 +19,7 @@ knitr::opts_knit$set(root.dir = "../")
 ```{r, eval=TRUE, echo=FALSE, message=FALSE}
 library(readxl)
 library(beeswarm)
-library(tidyr)
+library(tidyverse)
 library(sm)
 library(zoo)
 library(RColorBrewer)
@@ -35,7 +35,7 @@ library(RColorBrewer)
 
 # Searching, sorting and selecting
 
-## sort and order
+## sort and order (base R - not covered in the course)
 
 `sort` directly sorts a vector:
 
@@ -76,7 +76,7 @@ v <- sample(1:200, 15)
 sort(as.character(v))
 ```
 
-## Sorting data frames
+## Sorting data frames (using order)
 
 To sort a data frame according to one of its columns, we use `order` and
 then select rows of a data frame based on that order. That is the "classic"
@@ -131,7 +131,7 @@ has two effects:
 
 ```{r, eval=TRUE}
 ## read the transcriptomic results data set
-res <- read.csv("Datasets/transcriptomics_results.csv")
+res <- read_csv("Datasets/transcriptomics_results.csv")
 
 ## only a few interesting columns
 res <- res[ , c(3, 5, 8:9) ]
@@ -145,7 +145,7 @@ We can use sort, factor and level to find out more about our data set:
 
 ```{r}
 desc.sum <- summary(factor(res$Description))
-head(sort(desc.sum, decreasing=TRUE))
+head(sort(desc.sum, decreasing=TRUE)) # using base R sorting
 ```
 
 *Data from: Weiner, January, et al. "Characterization of potential
@@ -157,16 +157,21 @@ Scientific reports 9.1 (2019): 1-14.*
 
 ```{r}
 ## order by decreasing absolute logFC
-ord <- order(abs(res$LFC), decreasing=TRUE)
-res <- res[ord, ]
+res <- arrange(res, desc(abs(LFC)))
 plot(res$LFC[1:250], type="b")
 
+# base R
+# ord <- order(abs(res$LFC), decreasing=TRUE)
+# res <- res[ord, ]
+
 ## then, order by p-value
-ord <- order(res$p.value)
-res <- res[ord, ]
+res <- arrange(res, p.value)
 plot(abs(res$LFC[1:250]), type="b")
 plot(res$p.value[1:250], type="b", log="y")
 ```
+## Side-note on plotting 
+
+ * [Video: ggplot2 vs base R, 6 min](https://youtu.be/NnxJyCHrUTE)
 
 ## Selecting / filtering of data frames
 
@@ -383,6 +388,8 @@ df2 <- data.frame(ID=c("a", "a", "b", "c"), no=c(1, 2, 3, 4),
 merge(df1, df2)           ## not what we wanted
 merge(df1, df2, by="ID")  ## not what we wanted
 merge(df1, df2, by=c("ID", "no"))
+
+inner_join(df1, df2, by = c("ID", "no")) # tidyverse option
 ```
 
 ## Merging (cont.)

@@ -8,25 +8,22 @@
 
   maybe skip the matrices and do lists + data frames / tibbles first (
 
-* Day 3: introduce grep first, then gsub
+* Day 3: 
 
  * limit the regular expressions to a minimum
  * make this part shorter
 
- * for the long / wide format: use the iris data set and show plots
-   immediately
-
+ 
 * Day 4 
 
  * start with exercises earlier
-
- * use only tidyverse for ordering and filtering? (filter & arrange)
+ * use only tidyverse for ordering and filtering? (filter & arrange) -> base R is still part of the slide deck, but will not be covered in the lecture
+ 
 
  * Merging (cont.) -> figure out a better example
 
  * give better examples and easier exercise
  
-
 Other
 
  * Record a video about saving graphics to files
