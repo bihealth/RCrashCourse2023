@@ -31,15 +31,25 @@ The files `expression_data_vaccination_example.xlsx` and
 `labresults_full.csv` contain data from the same study.
 
  1. read the first sheet from the XLSX file and the CSV file.
- 3. Which columns ID the subjects? Are there any subjects in common? How do
+ 1. Which columns describe the ID of the subjects? Are there any subjects in common? How do
     you match the subjects?
- 5. We are interested only in the following information: Subject ID, ARM
+ 1. We are interested only in the following information: Subject ID, ARM
     (group), Time point, sex, age, test name and the actual measurement.
-    Are the measurements numeric? Remember, you can use expressions like `[ , c("ARM", "sex") ]` 
-    to select the desired columns from a data set.
- 4. Use the subjects to merge the two data frames however you see fit. Note
+    Are the measurements numeric? Remember, you can use expressions like `[ , c("ARM", "sex") ]` or `select()` to select the desired columns from a data set.
+ 1. Use the subjects to merge the two data frames however you see fit. Note
     that there are multiple time points per subject and multiple
     measurements per subject and time point.
+    
+## Exercise 5.1 - Explorative analysis
+
+After merging your data, we can now start with an exploratory analysis of this data. In particular, we are interested in the concentration of neutrophils over time and treatment.
+
+ 1. Is your data frame consistent?
+ 1. How can you filter the labresults for neutrophils?
+ 1. Create a data frame in wide format with columns denoting the measurements over time?
+ 1. Plot the distribution of neutrophils over time.
+ 1. What kind of descriptive analysis would you do to get familiar with this data set?
+
 
 ## Free style - your questions and projects 
 
@@ -60,52 +70,52 @@ The files `expression_data_vaccination_example.xlsx` and
  * t.test
  * PCA
 
-## Descriptive statistics
+<!-- ## Descriptive statistics -->
 
-`tapply(x, groups, func)` applies a function `func` to some data `x`
-grouped by `groups`.
+<!-- `tapply(x, groups, func)` applies a function `func` to some data `x` -->
+<!-- grouped by `groups`. -->
 
-```{r, eval=TRUE}
-library(tidyverse)
-labwide <- read_csv("Datasets/labresults_wide_full.csv")[, -1 ]
-mean(labwide$NEUT)
-sd(labwide$NEUT)
+<!-- ```{r, eval=TRUE} -->
+<!-- library(tidyverse) -->
+<!-- labwide <- read_csv("Datasets/labresults_wide_full.csv")[, -1 ] -->
+<!-- mean(labwide$NEUT) -->
+<!-- sd(labwide$NEUT) -->
 
-tapply(labwide$NEUT, labwide$ARM, mean)
-tapply(labwide$NEUT, labwide$Timepoint, mean)
-tapply(labwide$NEUT,
-  paste(labwide$ARM, labwide$Timepoint, sep="."), mean)
-```
+<!-- tapply(labwide$NEUT, labwide$ARM, mean) -->
+<!-- tapply(labwide$NEUT, labwide$Timepoint, mean) -->
+<!-- tapply(labwide$NEUT, -->
+<!--   paste(labwide$ARM, labwide$Timepoint, sep="."), mean) -->
+<!-- ``` -->
 
-## Simple t.test
+<!-- ## Simple t.test -->
 
-We define logical vectors to help us select the desired data.
+<!-- We define logical vectors to help us select the desired data. -->
 
-```{r,eval=TRUE}
-fluad    <- labwide$ARM == "FLUAD"
-agrippal <- labwide$ARM == "AGRIPPAL"
+<!-- ```{r,eval=TRUE} -->
+<!-- fluad    <- labwide$ARM == "FLUAD" -->
+<!-- agrippal <- labwide$ARM == "AGRIPPAL" -->
 
-d0 <- labwide$Timepoint == "D0"
-d1 <- labwide$Timepoint == "D1"
-```
+<!-- d0 <- labwide$Timepoint == "D0" -->
+<!-- d1 <- labwide$Timepoint == "D1" -->
+<!-- ``` -->
 
-## Simple t.test
+<!-- ## Simple t.test -->
 
-Paired or not paired?
+<!-- Paired or not paired? -->
 
-```{r,eval=TRUE}
-tst <- "NEUT" # lymphocyte count
-x <- as.data.frame(labwide)[,tst]
-t.test(x[d0 & fluad], x[d1 & fluad])
-t.test(x[d0 & fluad], x[d1 & fluad], paired=TRUE)
-```
+<!-- ```{r,eval=TRUE} -->
+<!-- tst <- "NEUT" # lymphocyte count -->
+<!-- x <- as.data.frame(labwide)[,tst] -->
+<!-- t.test(x[d0 & fluad], x[d1 & fluad]) -->
+<!-- t.test(x[d0 & fluad], x[d1 & fluad], paired=TRUE) -->
+<!-- ``` -->
 
 ## Broom: cleaning up data
 
 `tidy()` cleans up messy results of various standard statistical tests and
 formats them into a nice, clean, TIDY data frame (or, rather, a tibble).
 
-```{r,eval=TRUE,results="markdown"}
+```{r,eval=FALSE,results="markdown"}
 library(broom)
 tidy(t.test(x[d0 & fluad], x[d1 & fluad], paired=TRUE))
 ```
@@ -116,7 +126,8 @@ We must make sure that all the data points are paired!
 
 ## PCA
 
-```{r}
+```{r eval=TRUE}
+library(tidyverse)
 data(iris)
 theme_set(theme_bw())
 pca <- prcomp(iris[,1:4], scale.=TRUE)
