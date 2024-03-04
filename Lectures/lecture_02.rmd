@@ -458,4 +458,11 @@ returns a tibble, while `dataframe[ , 1]` returns a vector. The second
 crucial difference is that it does not support row names (on purpose!).
 
 
+## Summarizing all those brackets 
 
+- `[ ]` ... accessing the element of a vector / matrix / list / data frame -> extraction operators
+- `[[ ]]` ... accessing the element/items of a list
+- `$` ... accessing elements by name
+
+- `( )` ... used when calling a function to provide arguments
+- `{}` ... indicating a block, eg when defining a function

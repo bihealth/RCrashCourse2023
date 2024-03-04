@@ -1,5 +1,4 @@
-* Day 2: add an overview of the different parentheses / brackets () [] {}
-  ...
+* Day 2: 
   add a slide on absolute vs relative directory paths
 
   spend more time on logical vectors, e.g. is.na(), which(), sum(vec)
