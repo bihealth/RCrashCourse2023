@@ -295,20 +295,22 @@ r<-sqrt((b-mean(b))^2/a)
 ### Better:
 
 ```{r eval=FALSE,echo=TRUE}
+## Calculating the standard deviation of a sample
+
 # example values for five samples
 samples   <- c(1, 10, 20, 21, 5)
 samples_n <- length(samples)
 
+# calculate standard deviation of samples manually
 samples_mean <- mean(samples)
 samples_devs <- samples - samples_mean
 
 # samples variance
 samples_var  <- samples_devs^2 / (samples_n - 1)
 
-# calculate standard deviation of samples
 samples_sd   <- sqrt(samples_var)
 
-# use the built-in function
+# alternative: use the built-in function
 samples_sd <- sd(samples)
 
 ```
