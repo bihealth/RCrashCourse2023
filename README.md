@@ -20,7 +20,8 @@ To view HTML files, use the following links:
      * [Video: introduction to working with Rstudio, 11 minutes](https://youtu.be/zWt8BC1UNiQ)
      * [Video: introduction to functions, 5 minutes](https://youtu.be/rnGADz4cuBA)
      * [Video (extra): functions as values, 6 minutes](https://youtu.be/NTnLZQwKhvA)
-     
+
+<!--     
  * [Lecture 2](https://bihealth.github.io/RCrashCourse2023/Lectures/lecture_02.html): complex data types (matrices, lists, data frames); reading data; diagnosing data problems
      * [Video: using logical vectors for selecting elements, 8 minutes](https://youtu.be/xmeZofFlp78)
      * [Video: tibbles vs data frames, 10 minutes](https://youtu.be/eWu7kvNBpyc)
@@ -37,7 +38,7 @@ To view HTML files, use the following links:
      * [Video: introduction R markdown, 15 min](https://youtu.be/vBeGakSENi8)
      * [Video: basic document formatting in Rmarkdown documents, 9 minutes](https://youtu.be/rfMTn4NBDkQ)
      * [Video: including references in Rmarkdown documents, 7 min](https://youtu.be/DUG1tEL5kXI)
-
+-->
  
 ## Scripts from the Course 
 
