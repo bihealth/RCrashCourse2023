@@ -331,3 +331,19 @@ samples_sd <- sd(samples)
 
  * `https://youtu.be/rnGADz4cuBA`
  * `https://youtu.be/NTnLZQwKhvA`
+
+## Exercise 1.4 More on vectors (and functions)
+
+There is a lake in a garden. Every day, the water lilies cover twice as
+much area as the previous day. On the first day, the water lilies cover
+1/100th of the area of the lake.
+
+ * What is the formula to calculate the area covered by the water lilies on
+   day n? (pen and paper, not in Rstudio!)
+ * assign days 1 ... 10 to variable x (use `c()` or `:`). Now assign the fraction of the area
+   covered by water lilies on day n to variable y
+ * plot x vs y (use the simple `plot()` function)
+ * When will the half of the area be covered by water lilies? Use `abline(h=.5)`
+   (what does it do?) to show a graphical solution
+ * What is the fraction on day 3? Hint: what does `y[3]` do?
+ * Speaking of which, what does `y[4:5]` do? (just try it!)
