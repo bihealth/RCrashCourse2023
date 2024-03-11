@@ -22,14 +22,6 @@ knitr::opts_chunk$set(echo=FALSE,warning=FALSE,message=FALSE,fig.width=5,fig.hei
 
 # R crash course
 
-## Important links 
-
- * E-mail: `<cubi-teaching@charite.de>` 
- * Github: `https://github.com/bihealth/RcrashCourse2023`
- * Slides: `https://bihealth.github.io/RCrashCourse2023/`
- * Teams
-
-
 ## The Team
 
 
@@ -55,11 +47,12 @@ knitr::opts_chunk$set(echo=FALSE,warning=FALSE,message=FALSE,fig.width=5,fig.hei
  * Proceed along a helix
 
 
-## Course files
+## Important links 
 
-Course repository: https://github.com/bihealth/RCrashCourse2023
-
-Course pages (for viewing lectures): https://bihealth.github.io/RcrashCourse2023/
+ * E-mail: `<cubi-teaching@charite.de>` 
+ * Github: `https://github.com/bihealth/RcrashCourse2023`
+ * Slides: `https://bihealth.github.io/RCrashCourse2023/`
+ * Teams
 
 To view the lectures, click on the link or download the HTML file and open it in a browser.
 
@@ -118,7 +111,7 @@ project in this directory.
  * Do not ignore error messages. Very often, they tell you exactly what the
    problem is.
 
- * Google it!
+ * Google it! Or use ChatGPT ...
 
 
 ## Examples of R applications
