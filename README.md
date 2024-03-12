@@ -21,11 +21,11 @@ To view HTML files, use the following links:
      * [Video: introduction to functions, 5 minutes](https://youtu.be/rnGADz4cuBA)
      * [Video (extra): functions as values, 6 minutes](https://youtu.be/NTnLZQwKhvA)
 
-<!--     
  * [Lecture 2](https://bihealth.github.io/RCrashCourse2023/Lectures/lecture_02.html): complex data types (matrices, lists, data frames); reading data; diagnosing data problems
      * [Video: using logical vectors for selecting elements, 8 minutes](https://youtu.be/xmeZofFlp78)
      * [Video: tibbles vs data frames, 10 minutes](https://youtu.be/eWu7kvNBpyc)
- 
+
+<!-- 
  * [Lecture 3](https://bihealth.github.io/RCrashCourse2023/Lectures/lecture_03.html): Reading and cleaning data; reshaping data frames
      * [Video: wide vs long format, 9 minutes](https://youtu.be/NO1gaeJ7wtA)
      * [Video: converting from wide to long, 6 minutes](https://youtu.be/v5Y_yrnkWIU)
