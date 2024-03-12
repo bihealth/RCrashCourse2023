@@ -21,10 +21,27 @@ knitr::opts_chunk$set(echo=TRUE,eval=FALSE,warning=FALSE,message=FALSE,fig.width
 * Functions in R
 * Reading data from files
 
+![](images/data-science.png){ width=600px }
+
 ## Repetitorium of Day 1
 
-
 Questions, anybody?
+
+Summary on the lilies exercise
+
+## One more thing about vectors: named indices
+
+Elements of a vector can be accessed not only using numbers (indices) or
+logical vectors. You can assign names to vectors:
+
+
+```{r eval=F,echo=T}
+person <- c("January", "Weiner", 134)
+names(person) <- c("FirstName", "LastName", "Age")
+person["FirstName"]
+person["Age"]
+```
+
 
 ## Functions in R: a brief introduction
 
@@ -40,33 +57,6 @@ of them) and return a single object: a vector, a matrix or something else.
 
  * Sometimes functions return `NULL`, which is R for "nothing", but which is
 still something you can use or assign.
-
-
-## Exercise 2.1 More on vectors (and functions)
-
-There is a lake in a garden. Every day, the water lilies cover twice as
-much area as the previous day. On the first day, the water lilies cover
-1/100th of the area of the lake.
-
- * What is the formula to calculate the area covered by the water lilies on
-   day n? (pen and paper, not in Rstudio!)
- * assign days 1 ... 10 to variable x (use `c()` or `:`). Now assign the fraction of the area
-   covered by water lilies on day n to variable y
- * plot x vs y (use the simple `plot()` function)
- * When will the half of the area be covered by water lilies? Use `abline(h=.5)`
-   (what does it do?) to show a graphical solution
- * What is the fraction on day 3? Hint: what does `y[3]` do?
- * Speaking of which, what does `y[4:5]` do? (just try it!)
-
-## Exercise 2.2: More on plotting
-
- * Make the plot yourself.
- * use 'col' parameter of `plot` and a color name (e.g. "red") to change
-   the color of the line (`plot(..., col="red")`)
- * what if each day the lilies cover a fraction of area that is 1.5 the
-   fraction of area on the previous day?
- * Use `lines(x, y)` function to put a second line on the plot
- * For more experienced users: Create a Rmarkdown.
 
 ## Logical vectors
 
@@ -105,8 +95,9 @@ greek <- persons[ c(T, F, T, T, T) ]
 
 * `https://youtu.be/xmeZofFlp78`
 
+* Back to the lilies - how do you change all values which are greater than 1 to 1?
 
-## Exercise 2.3: more on vectors and functions, introducing NA
+## Exercise 2.1: more on vectors and functions, introducing NA
 
 Create a vector as follows:
 
@@ -125,9 +116,7 @@ samples <- c(1, 10, NA, 15)
  * what does the `is.na()` function return when applied to `samples`?
  * how do you find `NA` values? Use `is.na` and `which`
  * How do you select only these samples which are not `NA`?
-
-
-
+ 
 ## Extra (if you are bored): Creating a function
 
 The reason we are showing how to create a function is to show you that it
@@ -192,19 +181,6 @@ m[, 2] # vector which is the first column
 m[3, 1] # first element of the third row
 ```
 
-## One more thing about vectors: named indices
-
-Elements of a vector can be accessed not only using numbers (indices) or
-logical vectors. You can assign names to vectors:
-
-
-```{r eval=F,echo=T}
-person <- c("January", "Weiner", 134)
-names(person) <- c("FirstName", "LastName", "Age")
-person["FirstName"]
-person["Age"]
-```
-
 
 ## Row and column names
 
@@ -230,7 +206,7 @@ m[   , "b"]  # one column
  * **REMEMBER:** Vectors and matrices **always** have only one data type
    (string, integer etc.)
 
-## Exercise 2.4: Matrices - accessing and changing elements
+## Exercise 2.2: Matrices - accessing and changing elements
 
 Assume you have a 48 well-plate for a drug sensitivity analysis with viability scores.
 
@@ -264,9 +240,6 @@ person <- list(name="Weiner",
                Age=NA, 
                given="January")
 ```
-
-
-
 
 
 
@@ -365,7 +338,7 @@ vectors can hold only one type of data.
  * `https://youtu.be/eWu7kvNBpyc`
 
 
-## Exercise 2.5
+## Exercise 2.3
 
  * Create a 5x3 matrix with random numbers. Use `matrix` and `rnorm`.
  * Turn the matrix into a data frame. Use `as.data.frame` for that.
@@ -426,8 +399,17 @@ Note: there are also "base R" functions `read.table`, `read.csv`,
 `read.tsv` (there is no function for reading XLS[X] files in base R). The
 tidyverse functions above are preferable.
 
+## Where are your files - absolute vs relative paths
 
-## Excercise 2.6
+ * absolute path start at root directory, e.g.  
+ `C:\Users\mbenary_c\CUBI\teaching\202403_RCrashCourse\lecture01.R`
+ 
+ * start at the working directory `lecture01.R`
+ * Where am I? - `getwd()`
+ 
+ * Downloading files from our git-repository
+
+## Excercise 2.4
 
 Read, inspect the following files:
 
