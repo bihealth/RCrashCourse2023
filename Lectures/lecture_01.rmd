@@ -347,3 +347,15 @@ much area as the previous day. On the first day, the water lilies cover
    (what does it do?) to show a graphical solution
  * What is the fraction on day 3? Hint: what does `y[3]` do?
  * Speaking of which, what does `y[4:5]` do? (just try it!)
+ 
+
+## Exercise 2.2: More on plotting
+
+ * Make the plot yourself.
+ * use 'col' parameter of `plot` and a color name (e.g. "red") to change
+   the color of the line (`plot(..., col="red")`)
+ * what if each day the lilies cover a fraction of area that is 1.5 the
+   fraction of area on the previous day?
+ * Use `lines(x, y)` function to put a second line on the plot
+ * For more experienced users: Create a Rmarkdown.
+
