@@ -9,7 +9,7 @@
 
 
 
-  <meta name="date" content="2023-09-06" />
+  <meta name="date" content="2024-03-13" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -3070,18 +3070,21 @@ var loadDeck = function(event) {
   });
 };
 
-if (document.readyState !== "loading" &&
-    document.querySelector('slides') === null) { 
-  // if the document is done loading but our element hasn't yet appeared, defer
-  // loading of the deck
-  window.setTimeout(function() {
-    loadDeck(null);
-  }, 0);
-} else {
-  // still loading the DOM, so wait until it's finished
-  document.addEventListener("DOMContentLoaded", loadDeck);
-}
+if (!window.Shiny) {
+  // If Shiny is loaded, the slide deck is initialized in ioslides template
 
+  if (document.readyState !== "loading" &&
+      document.querySelector('slides') === null) {
+    // if the document is done loading but our element hasn't yet appeared, defer
+    // loading of the deck
+    window.setTimeout(function() {
+      loadDeck(null);
+    }, 0);
+  } else {
+    // still loading the DOM, so wait until it's finished
+    document.addEventListener("DOMContentLoaded", loadDeck);
+  }
+}
 
 
 </script>
@@ -3267,19 +3270,114 @@ background: #70ACC0;
       <h1 data-config-title><!-- populated from slide_config.json --></h1>
       
       <p data-config-presenter><!-- populated from slide_config.json --></p>
-            <p style="margin-top: 6px; margin-left: -2px;">2023-09-06</p>
+            <p style="margin-top: 6px; margin-left: -2px;">2024-03-13</p>
           </hgroup>
   </slide>
 
 <slide class=""><hgroup><h2>Aims for today</h2></hgroup><article  id="aims-for-today" class="smaller ">
 
 <ul>
+<li>Reading data</li>
 <li>Cleaning data</li>
-<li>Regular expressions</li>
+<li>(Regular expressions)</li>
 <li>Searching, sorting and selecting</li>
 </ul>
 
 </article></slide><slide class=""><hgroup><h2>Repetitorium of Day 2</h2></hgroup><article  id="repetitorium-of-day-2" class="smaller ">
+
+</article></slide><slide class="segue dark nobackground level1"><hgroup class = 'auto-fadein'><h2>Reading and writing data</h2></hgroup><article  id="reading-and-writing-data" class="smaller ">
+
+</article></slide><slide class=""><hgroup><h2>Reading data</h2></hgroup><article  id="reading-data" class="smaller ">
+
+<p>Main data types you will encounter:</p>
+
+<table class = 'rmdtable'>
+<col width="24.166667%" />
+<col width="26.666667%" />
+<col width="26.666667%" />
+<col width="22.500000%" />
+<tr class="header">
+<th align="left">Data type</th>
+<th align="left">Function</th>
+<th align="left">Package</th>
+<th align="left">Notes</th>
+</tr>
+<tr class="odd">
+<td align="left">Columns separated by spaces</td>
+<td align="left"><code>read_table()</code></td>
+<td align="left"><code>readr</code></td>
+<td align="left">one or more spaces separate each column</td>
+</tr>
+<tr class="even">
+<td align="left">TSV / TAB separated values</td>
+<td align="left"><code>read_tsv()</code></td>
+<td align="left"><code>readr</code></td>
+<td align="left">Delimiter is tab (<code>\t</code>).</td>
+</tr>
+<tr class="odd">
+<td align="left">CSV / comma separated</td>
+<td align="left"><code>read_csv()</code></td>
+<td align="left"><code>readr</code></td>
+<td align="left">Comma separated values</td>
+</tr>
+<tr class="even">
+<td align="left">Any delimiter</td>
+<td align="left"><code>read_delim()</code></td>
+<td align="left"><code>readr</code></td>
+<td align="left">Customizable</td>
+</tr>
+<tr class="odd">
+<td align="left">XLS (old Excel)</td>
+<td align="left"><code>read_xls()</code> <code>read_excel()</code></td>
+<td align="left"><code>readxl</code></td>
+<td align="left">Just don’t use it. From the <code>readxl</code> package.</td>
+</tr>
+<tr class="even">
+<td align="left">XLSX (new Excel)</td>
+<td align="left"><code>read_xlsx()</code> <code>read_excel()</code></td>
+<td align="left"><code>readxl</code></td>
+<td align="left">From the <code>readxl</code> package. You need to provide the sheet number you wish to read. Note: returns a tibble, not a data frame!</td>
+</tr>
+</table>
+
+<p>Note: there are also &ldquo;base R&rdquo; functions <code>read.table</code>, <code>read.csv</code>, <code>read.tsv</code> (there is no function for reading XLS[X] files in base R). The tidyverse functions above are preferable.</p>
+
+</article></slide><slide class=""><hgroup><h2>Where are your files - absolute vs relative paths</h2></hgroup><article  id="where-are-your-files---absolute-vs-relative-paths" class="smaller ">
+
+<ul>
+<li><p>absolute path start at root directory, e.g.<br/><code>C:\Users\mbenary_c\CUBI\teaching\202403_RCrashCourse\lecture01.R</code></p></li>
+<li><p>start at the working directory <code>lecture01.R</code></p></li>
+<li><p>Where am I? - <code>getwd()</code></p></li>
+<li><p>Downloading files from our git-repository</p></li>
+</ul>
+
+</article></slide><slide class=""><hgroup><h2>Excercise 3.1</h2></hgroup><article  id="excercise-3.1" class="smaller ">
+
+<p>Read, inspect the following files:</p>
+
+<ul>
+<li><code>TB_ORD_Gambia_Sutherland_biochemicals.csv</code></li>
+<li><code>iris.csv</code></li>
+<li><code>meta_data_botched.xlsx</code></li>
+</ul>
+
+<ol>
+<li>Which functions would you use?</li>
+<li>What kind of issues can you detect?</li>
+<li>Suggestions of solving the issues?</li>
+</ol>
+
+<p>The function <code>readxl_example(&quot;deaths.xls&quot;)</code> returns a file name. Read this file. How can you omit the lines at the top and at the bottom of the file? (hint: <code>?read_excel</code>). How can you force the date columns to be interpreted as dates and not numbers?</p>
+
+</article></slide><slide class=""><hgroup><h2>Tibbles / readxl</h2></hgroup><article  id="tibbles-readxl" class="smaller ">
+
+<p>tibbles belong to the tidyverse. They are nice to work with and very useful, but we can stick to data frames for now. Therefore, do</p>
+
+<pre class = 'prettyprint lang-r'>mydataframe &lt;- as.data.frame(read_xlsx(&quot;file.xlsx&quot;))</pre>
+
+<p>One crucial difference between tibble and data frame is that <code>tibble[ , 1 ]</code> returns a tibble, while <code>dataframe[ , 1]</code> returns a vector. The second crucial difference is that it does not support row names (on purpose!).</p>
+
+<p><a href='https://youtu.be/eWu7kvNBpyc' title=''>Video: tibbles vs data frames, 10 minutes</a> -&gt; for later</p>
 
 </article></slide><slide class="segue dark nobackground level1"><hgroup class = 'auto-fadein'><h2>Cleaning data</h2></hgroup><article  id="cleaning-data" class="smaller ">
 
@@ -3406,6 +3504,7 @@ summary_colorDF(myiris)</pre>
 <li>find the incorrect values</li>
 <li>replace incorrect values (by search and replace)</li>
 <li>enforcing a particular data type (e.g., converting strings to numbers)</li>
+<li><a href='https://youtu.be/ukN59iCo5wc' title=''>Video: introduction to regular expressions, 15 minutes</a></li>
 </ul>
 
 </article></slide><slide class=""><hgroup><h2>Using patterns to clean data</h2></hgroup><article  id="using-patterns-to-clean-data" class="smaller ">
@@ -3553,7 +3652,7 @@ vec &lt;- gsub(&quot;^ *&quot;, &quot;&quot;, vec)
 vec &lt;- gsub(&quot;^m.*&quot;, &quot;Mouse&quot;, vec)
 vec &lt;- gsub(&quot;S*chicken&quot;, &quot;Chicken&quot;, vec)</pre>
 
-</article></slide><slide class=""><hgroup><h2>Exercise 3.1</h2></hgroup><article  id="exercise-3.1" class="smaller ">
+</article></slide><slide class=""><hgroup><h2>Exercise 3.2</h2></hgroup><article  id="exercise-3.2" class="smaller ">
 
 <ul>
 <li>Use gsub to make the following uniform: <code>c(&quot;male&quot;, &quot;Male &quot;, &quot;M&quot;, &quot;F&quot;, &quot;female&quot;, &quot; Female&quot;)</code></li>
@@ -3563,7 +3662,7 @@ vec &lt;- gsub(&quot;S*chicken&quot;, &quot;Chicken&quot;, vec)</pre>
 
 </article></slide><slide class=""><hgroup><h2>Using regular expressions to clean tables</h2></hgroup><article  id="using-regular-expressions-to-clean-tables" class="smaller ">
 
-</article></slide><slide class=""><hgroup><h2>Exercise 3.2</h2></hgroup><article  id="exercise-3.2" class="smaller ">
+</article></slide><slide class=""><hgroup><h2>Exercise 3.3</h2></hgroup><article  id="exercise-3.3" class="smaller ">
 
 <ul>
 <li>Read the data file <code>iris.csv</code> using the <code>read_csv</code> function. Spot and correct errors.</li>
@@ -3688,7 +3787,7 @@ pivot_wider(long, names_from=&quot;condition&quot;, values_from=&quot;measuremen
 ## Instead: 
 pivot_wider(long, id_cols=&quot;subject&quot;, names_from=&quot;condition&quot;, values_from=&quot;measurement&quot;)</pre>
 
-</article></slide><slide class=""><hgroup><h2>Exercise 3.3</h2></hgroup><article  id="exercise-3.3" class="smaller ">
+</article></slide><slide class=""><hgroup><h2>Exercise 3.4</h2></hgroup><article  id="exercise-3.4" class="smaller ">
 
 <p>Convert the following files to long format:</p>
 
@@ -3729,6 +3828,11 @@ pivot_wider(long, id_cols=&quot;subject&quot;, names_from=&quot;condition&quot;,
        window.jQuery(document).on('slideenter', function(e) {
          window.jQuery(e.target).trigger('shown');
       });
+    }
+    if (window.Shiny) {
+      // Initialize slides when this script appears on the page, since it
+      // indicates that the <slides> markup has been fully loaded.
+      window.loadDeck();
     }
   })();
 </script>

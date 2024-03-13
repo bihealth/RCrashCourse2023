@@ -17,11 +17,93 @@ knitr::opts_chunk$set(echo=TRUE,eval=FALSE,warning=FALSE,message=FALSE,fig.width
 
 ## Aims for today
 
+* Reading data
 * Cleaning data
-* Regular expressions
+* (Regular expressions)
 * Searching, sorting and selecting
 
 ## Repetitorium of Day 2
+
+# Reading and writing data
+
+## Reading data
+
+Main data types you will encounter:
+
+---------------------------- ------------------------------- ------------------------------- --------------------------
+Data type                    Function                        Package                         Notes
+---------------------------- ------------------------------- ------------------------------- --------------------------
+Columns separated by spaces  `read_table()`                  `readr`                         one or more
+                                                                                             spaces separate 
+                                                                                             each column
+                                                             
+TSV / TAB separated values   `read_tsv()`                    `readr`                         Delimiter is tab (`\t`).
+                                                             
+CSV / comma separated        `read_csv()`                    `readr`                         Comma separated values
+                                                                                             
+Any delimiter                `read_delim()`                  `readr`                         Customizable
+                                                             
+XLS (old Excel)              `read_xls()`                    `readxl`                        Just don't use it.
+                             `read_excel()`                                                  From the
+                                                                                             `readxl`
+                                                                                             package.
+                                                             
+XLSX (new Excel)             `read_xlsx()`                   `readxl`                        From the `readxl` package.
+                             `read_excel()`                                                  You need to
+                                                                                             provide the
+                                                                                             sheet number
+                                                                                             you wish to
+                                                                                             read. 
+                                                                                             Note: returns a tibble,
+                                                                                             not a data frame! 
+---------------------------- ------------------------------- ------------------------------- --------------------------
+
+Note: there are also "base R" functions `read.table`, `read.csv`,
+`read.tsv` (there is no function for reading XLS[X] files in base R). The
+tidyverse functions above are preferable.
+
+## Where are your files - absolute vs relative paths
+
+ * absolute path start at root directory, e.g.  
+ `C:\Users\mbenary_c\CUBI\teaching\202403_RCrashCourse\lecture01.R`
+ 
+ * start at the working directory `lecture01.R`
+ * Where am I? - `getwd()`
+ 
+ * Downloading files from our git-repository
+
+## Excercise 3.1
+
+Read, inspect the following files:
+
+ * `TB_ORD_Gambia_Sutherland_biochemicals.csv`
+ * `iris.csv`
+ * `meta_data_botched.xlsx` 
+
+ 1. Which functions would you use? 
+ 1. What kind of issues can you detect?
+ 1. Suggestions of solving the issues?
+ 
+The function `readxl_example("deaths.xls")` returns a file name. Read this file. How can you omit the lines at the top and at the bottom of the file?
+(hint: `?read_excel`). How can you force the date columns to be interpreted
+as dates and not numbers?
+
+
+## Tibbles / readxl
+
+tibbles belong to the tidyverse. They are nice to work with and very
+useful, but we can stick to data frames for now. Therefore, do
+
+```{r}
+mydataframe <- as.data.frame(read_xlsx("file.xlsx"))
+```
+
+One crucial difference between tibble and data frame is that `tibble[ , 1 ]` 
+returns a tibble, while `dataframe[ , 1]` returns a vector. The second
+crucial difference is that it does not support row names (on purpose!).
+
+[Video: tibbles vs data frames, 10 minutes](https://youtu.be/eWu7kvNBpyc) -> for later
+
 
 # Cleaning data
 ## A short note on organizing your data
@@ -131,6 +213,7 @@ summary_colorDF(myiris)
  * find the incorrect values
  * replace incorrect values (by search and replace)
  * enforcing a particular data type (e.g., converting strings to numbers)
+ * [Video: introduction to regular expressions, 15 minutes](https://youtu.be/ukN59iCo5wc)
 
 ## Using patterns to clean data
 
@@ -302,7 +385,7 @@ vec <- gsub("^m.*", "Mouse", vec)
 vec <- gsub("S*chicken", "Chicken", vec)
 ```
 
-## Exercise 3.1
+## Exercise 3.2
 
  * Use gsub to make the following uniform: `c("male", "Male ", "M", "F", "female", " Female")`
  * Using `gsub` and the `toupper` function, clean up the gene names such
@@ -314,7 +397,7 @@ vec <- gsub("S*chicken", "Chicken", vec)
 ## Using regular expressions to clean tables 
 
 
-## Exercise 3.2
+## Exercise 3.3
 
  * Read the data file `iris.csv` using the `read_csv` function. Spot and correct errors.
  * If you have time: Read the data file `meta_data_botched.xlsx`. Spot and correct errors.
@@ -423,7 +506,7 @@ pivot_wider(long, names_from="condition", values_from="measurement")
 pivot_wider(long, id_cols="subject", names_from="condition", values_from="measurement")
 ```
 
-## Exercise 3.3
+## Exercise 3.4
 
 Convert the following files to long format:
 
