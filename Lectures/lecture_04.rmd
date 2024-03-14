@@ -25,13 +25,67 @@ library(zoo)
 library(RColorBrewer)
 ```
 
+## Wide vs long format continued ...
+
+ * https://youtu.be/NO1gaeJ7wtA
+ * https://youtu.be/v5Y_yrnkWIU
+ * https://youtu.be/jN0CI62WKs8
+
+ Long advantages:
+
+  * easier to filter, process, visualize, do statistics with
+  * focused on measurement ("patient ID" or equivalent is a covariate, and so is measurement type)
+ 
+ Wide advantages:
+
+  * groups data by a covariate ("patient ID")
+  * can be easier to manage (each column one measurement type)
+  
+## Exercise 4.1
+
+Convert the following files to long format:
+
+ * `labresults_wide.csv`
+ * The iris data set (`data(iris)`)
+ * `cars.xlsx` (tricky!)
+
+Discuss how to clean up and convert to long format (what seems to be the problem? How do
+we deal with that?):
+
+ * `mtcars_wide.csv`
+
 ## Aims for today
 
+* Pipes - writing readable code
 * Searching, sorting and selecting
 * Matching and merging data
 * Visualization
 
 ![](images/data-science.png){ width=600px }
+
+# Pipes in R
+
+## Nested function calls vs piping
+
+```{r eval=TRUE, echo=FALSE, message=FALSE}
+iris <- read_csv("Datasets/iris.csv")
+iris <- janitor::clean_names(iris)
+```
+
+
+```{r}
+# from Exercise 3.3
+iris$petal_length <- gsub("[a-z]", "", iris$petal_length) 
+iris$petal_length <- gsub(",", ".", iris$petal_length)
+iris$petal_length <- as.numeric(iris$petal_length)
+
+iris$petal_length |> 
+  str_remove("[a-z]", "") |> 
+  str_replace(",", ".") |> 
+  as.numeric()
+  
+```
+
 
 # Searching, sorting and selecting
 
@@ -189,7 +243,7 @@ filter(res, p.value < 0.05)
 ## see comment about tidyverse above
 ```
 
-## Excercise 4.1
+## Excercise 4.2
 
  * Load the example transcriptomic data (`transcriptomics_results.csv`)
  * Inspect the data frame. 
@@ -314,9 +368,9 @@ res[sel, ] ## or: filter(res, sel)
 
 *Note: More on the `filter()` function and other tidyverse functions later.`*
 
-## Excercise 4.2
+## Excercise 4.3
 
-Continue with the data frame from exercise 4.1
+Continue with the data frame from exercise 4.2
 
  * Create a data frame which contains only genes which have significant
    differences at qval < 0.05 and abs(log2FC) > 1.5.
