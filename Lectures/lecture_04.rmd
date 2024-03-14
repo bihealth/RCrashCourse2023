@@ -250,8 +250,11 @@ filter(res, p.value < 0.05)
    * `qval` stands for false discovery rate (p-value corrected with Benjamini-Hochberg method)
    * `logFC` is log~2~ fold change
    * `D0`..`D3` is day 0 to day 3
+ * Pick a day to work with (D1 is a good choice)
  * Try sorting of the data frame; by gene name, by identifier, by log fold
    change, by absolute log fold change (you can use any method)
+ * Create a new data frame which contains only genes which have
+   significant down-regulation (qval < 0.05 and log~2~FC < 0)
  * How many genes are significantly down-regulated?
  * Order the new data frame by Gene name (A-Z)
 

@@ -3070,21 +3070,18 @@ var loadDeck = function(event) {
   });
 };
 
-if (!window.Shiny) {
-  // If Shiny is loaded, the slide deck is initialized in ioslides template
-
-  if (document.readyState !== "loading" &&
-      document.querySelector('slides') === null) {
-    // if the document is done loading but our element hasn't yet appeared, defer
-    // loading of the deck
-    window.setTimeout(function() {
-      loadDeck(null);
-    }, 0);
-  } else {
-    // still loading the DOM, so wait until it's finished
-    document.addEventListener("DOMContentLoaded", loadDeck);
-  }
+if (document.readyState !== "loading" &&
+    document.querySelector('slides') === null) { 
+  // if the document is done loading but our element hasn't yet appeared, defer
+  // loading of the deck
+  window.setTimeout(function() {
+    loadDeck(null);
+  }, 0);
+} else {
+  // still loading the DOM, so wait until it's finished
+  document.addEventListener("DOMContentLoaded", loadDeck);
 }
+
 
 
 </script>
@@ -3469,7 +3466,9 @@ filter(res, p.value &lt; 0.05)
 <li><code>logFC</code> is log<sub>2</sub> fold change</li>
 <li><code>D0</code>..<code>D3</code> is day 0 to day 3</li>
 </ul></li>
+<li>Pick a day to work with (D1 is a good choice)</li>
 <li>Try sorting of the data frame; by gene name, by identifier, by log fold change, by absolute log fold change (you can use any method)</li>
+<li>Create a new data frame which contains only genes which have significant down-regulation (qval &lt; 0.05 and log<sub>2</sub>FC &lt; 0)</li>
 <li>How many genes are significantly down-regulated?</li>
 <li>Order the new data frame by Gene name (A-Z)</li>
 </ul>
@@ -3676,11 +3675,6 @@ merge(df1, df2, by=&quot;subject.id&quot;)</pre>
        window.jQuery(document).on('slideenter', function(e) {
          window.jQuery(e.target).trigger('shown');
       });
-    }
-    if (window.Shiny) {
-      // Initialize slides when this script appears on the page, since it
-      // indicates that the <slides> markup has been fully loaded.
-      window.loadDeck();
     }
   })();
 </script>
