@@ -20,27 +20,116 @@ knitr::opts_knit$set(root.dir = "../")
 
 ## Aims for today
 
-* Combining multiple data sets
+* Combining multiple data sets / Merging
+* Creating your first report -> bringing together everything you learned
 * Introduction into statistics with R
-* Freestyle - working on your data and questions
+
+# Matching data sets
+
+## Finding common IDs
+
+We can use `intersect()` for that.
+
+```{r}
+set1 <- letters[1:5]
+set2 <- letters[3:7]
+intersect(set1, set2)
+```
 
 
-## Excercise 4.3 (Recap from yesterday)
+## Merging
+
+A better, but more complex solution to merge two data frames is the
+`merge()` function.
+
+Some SQL terminology:
+
+ * inner join: we are merging only common elements
+ * outer join: we are making sure that elements from both sets are taken
+   over
+ * left outer join: same, but only for the first set
+ * right outer join: same, but only for the second set
+
+## Merging: create example data frames
+
+```{r}
+df1 <- data.frame(ID=sample(letters, 15), value1=rnorm(15))
+df2 <- data.frame(ID=sample(letters, 15), value2=rnorm(15))
+```
+
+
+## Merging (cont.)
+
+Usage of the `merge()` function:
+
+```{r}
+merge(df1, df2) # inner join by default
+merge(df1, df2, all.x=TRUE) # left outer join
+merge(df1, df2, all.y=TRUE) # right outer join
+merge(df1, df2, all=TRUE) # outer join
+```
+
+Note: tidyverse contains functions `inner_join`, `outer_join` etc. which
+look slightly more specific (but do the same).
+
+## Merging (cont.)
+
+The `by`, `by.x` and `by.y` parameters tell `merge` which columns contain
+the identifiers by which to join. It is always safer to specify this
+parameter!
+
+```{r}
+df1 <- data.frame(ID=c("a", "a", "b", "c"), no=c(1, 2, 3, 4), 
+  value=rnorm(4))
+df2 <- data.frame(ID=c("a", "a", "b", "c"), no=c(1, 2, 3, 4), 
+  value=rnorm(4))
+merge(df1, df2)           ## not what we wanted
+merge(df1, df2, by="ID")  ## not what we wanted
+merge(df1, df2, by=c("ID", "no"))
+
+inner_join(df1, df2, by = c("ID", "no")) # tidyverse option
+```
+
+## Merging (cont.)
+
+A simpler (but requiring more steps) alternative would be to make a new
+identifier:
+
+```{r}
+df1$ID2 <- paste(df1$ID, df1$no, sep=".")
+df2$ID2 <- paste(df2$ID, df2$no, sep=".")
+merge(df1, df2, by="ID2")
+```
+
+## Another example
+
+```{r}
+df1 <- data.frame(subject.id=1:3, sex=c("M", "F", "F"), 
+  age=c(28, 35, 29))
+df2 <- data.frame(subject.id=rep(1:3, each=2), 
+  timepoint=rep(1:2, 3), value=rnorm(6))
+merge(df1, df2, by="subject.id")
+```
+
+
+## Excercise 5.1
 
 The files `expression_data_vaccination_example.xlsx` and
 `labresults_full.csv` contain data from the same study.
 
  1. read the first sheet from the XLSX file and the CSV file.
- 1. Which columns describe the ID of the subjects? Are there any subjects in common? How do
+ 3. Which columns ID the subjects? Are there any subjects in common? How do
     you match the subjects?
- 1. We are interested only in the following information: Subject ID, ARM
+ 5. We are interested only in the following information: Subject ID, ARM
     (group), Time point, sex, age, test name and the actual measurement.
-    Are the measurements numeric? Remember, you can use expressions like `[ , c("ARM", "sex") ]` or `select()` to select the desired columns from a data set.
- 1. Use the subjects to merge the two data frames however you see fit. Note
+    Are the measurements numeric? Remember, you can use expressions like `[ , c("ARM", "sex") ]` 
+    to select the desired columns from a data set.
+ 4. Use the subjects to merge the two data frames however you see fit. Note
     that there are multiple time points per subject and multiple
     measurements per subject and time point.
-    
-## Exercise 5.1 - Explorative analysis
+
+
+## Exercise 5.2 - Explorative analysis
 
 After merging your data, we can now start with an exploratory analysis of this data. In particular, we are interested in the concentration of neutrophils over time and treatment.
 
@@ -51,7 +140,7 @@ After merging your data, we can now start with an exploratory analysis of this d
  1. What kind of descriptive analysis would you do to get familiar with this data set?
 
 
-## Free style - your questions and projects 
+## Creating your first report - using Rmarkdown
 
  * Creating pretty tables -> Rmarkdown
     * [Video: introduction R markdown, 15 min](https://youtu.be/vBeGakSENi8)
@@ -59,6 +148,8 @@ After merging your data, we can now start with an exploratory analysis of this d
     * [Video: including references in Rmarkdown documents, 7 min](https://youtu.be/DUG1tEL5kXI)
     * [kableExtra](https://cran.r-project.org/web/packages/kableExtra/vignettes/awesome_table_in_html.html)
     
+    
+<!--    
 ## Free style - your questions and projects 
 
  * heatmap: long vs wide format
@@ -108,7 +199,7 @@ After merging your data, we can now start with an exploratory analysis of this d
 <!-- x <- as.data.frame(labwide)[,tst] -->
 <!-- t.test(x[d0 & fluad], x[d1 & fluad]) -->
 <!-- t.test(x[d0 & fluad], x[d1 & fluad], paired=TRUE) -->
-<!-- ``` -->
+<!-- ``` 
 
 ## Broom: cleaning up data
 
@@ -144,7 +235,7 @@ pca <- prcomp(iris[,1:4], scale.=TRUE)
 df <- data.frame(pca$x, species=iris$Species)
 ggplot(df, aes(x=PC1, y=PC2, color=species)) + geom_point()
 ```
-
+-->
 ## Summary - Let's bring all concepts together
 
 ![](images/summaryCourse.png){ width=900px }
