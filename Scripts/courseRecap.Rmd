@@ -1,0 +1,123 @@
+---
+title: "Exploring the iris data set"
+author: "MB"
+date: "2024-03-15"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Recap of the week
+
+ * how to use functions
+ * how to create matrices and data frame
+ * how to work with different data types
+ 
+ * how import and view data
+ * how to clean data
+ * how to merge data
+ * how to plot graphs
+ 
+## Introducing the iris data set
+
+*taken from wikipedia*
+
+The Iris flower data set or Fisher's Iris data set is a multivariate data set used and made famous by the British statistician and biologist Ronald Fisher in his 1936 paper The use of multiple measurements in taxonomic problems as an example of linear discriminant analysis.[1] It is sometimes called Anderson's Iris data set because Edgar Anderson collected the data to quantify the morphologic variation of Iris flowers of three related species.[2] Two of the three species were collected in the Gaspé Peninsula "all from the same pasture, and picked on the same day and measured at the same time by the same person with the same apparatus".[3]
+
+The data set consists of 50 samples from each of three species of Iris (Iris setosa, Iris virginica and Iris versicolor). Four features were measured from each sample: the length and the width of the sepals and petals, in centimeters. Based on the combination of these four features, Fisher developed a linear discriminant model to distinguish the species from each other. Fisher's paper was published in the Annals of Eugenics (today the Annals of Human Genetics).[1] 
+
+## Importing the data set
+
+Some information about importing data ...
+```{r echo=FALSE}
+library(readxl)
+iris <- read_excel("Datasets/irisForMarkDown.xlsx")
+meta <- read_excel("Datasets/irisForMarkDown.xlsx", sheet = 2)
+```
+
+
+## Cleaning data
+ * get consistent column names/header, you need to load library "janitor"
+ * janitor masks functions from stats
+
+```{r clean-data, message=FALSE, warning=FALSE}
+library(janitor)
+iris <- clean_names(iris) 
+meta <- clean_names(meta)
+
+meta$species <- tolower(meta$species)
+
+iris$sepal_length <- gsub(",", ".", iris$sepal_length)
+iris$sepal_length <- gsub("[[:alpha:]]", "", iris$sepal_length)
+iris$sepal_length <- as.numeric(iris$sepal_length)
+
+iris$petal_length <- gsub("[[:alpha:]]", "", iris$petal_length)
+iris$petal_length <- as.numeric(iris$petal_length)
+
+
+```
+
+## View data 
+
+```{r}
+iris
+```
+
+```{r}
+meta
+```
+
+
+## Merging data
+
+```{r}
+iris <- merge(iris, meta, by = "flower", all = T)
+```
+
+
+## Explorative data analysis
+Summarizing data 
+
+```{r}
+library(writexl)
+sumIris <- colorDF::summary_colorDF(iris)
+#write_xlsx(sumIris, path = "sumIris.xlsx")
+
+DT::datatable(sumIris)
+```
+
+```{r}
+library(tidyverse)
+iris |> 
+  ggplot(aes(x = petal_length, y = petal_width, color = species)) + geom_point() +
+# annotate text  geom_text()
+  theme_classic()
+```
+
+publication ready plots -> ggpubr
+
+```{r}
+pca <- prcomp(iris[,2:5], scale. = TRUE)
+df <- data.frame(pca$x, species=iris$species)
+ggplot(df, aes(x=PC1, y=PC2, color=species)) + geom_point()
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
