@@ -16,7 +16,7 @@ To view HTML files, use the following links:
 
 ## Lectures
 
- * [Lecture 1](https://bihealth.github.io/RCrashCourse2023/Lectures/lecture_01.html): working with Rstudio; simple data types; selecting vectors
+<!-- * [Lecture 1](https://bihealth.github.io/RCrashCourse2023/Lectures/lecture_01.html): working with Rstudio; simple data types; selecting vectors
      * [Video: introduction to working with Rstudio, 11 minutes](https://youtu.be/zWt8BC1UNiQ)
      * [Video: introduction to functions, 5 minutes](https://youtu.be/rnGADz4cuBA)
      * [Video (extra): functions as values, 6 minutes](https://youtu.be/NTnLZQwKhvA)
@@ -40,7 +40,7 @@ To view HTML files, use the following links:
  * [Lecture 5](https://bihealth.github.io/RCrashCourse2023/Lectures/lecture_05.html): Visualisations, rmarkdown, Freestyle
      * [Video: introduction R markdown, 15 min](https://youtu.be/vBeGakSENi8)
      * [Video: basic document formatting in Rmarkdown documents, 9 minutes](https://youtu.be/rfMTn4NBDkQ)
-     * [Video: including references in Rmarkdown documents, 7 min](https://youtu.be/DUG1tEL5kXI)
+     * [Video: including references in Rmarkdown documents, 7 min](https://youtu.be/DUG1tEL5kXI) -->
 
 ## Scripts from the Course 
 
