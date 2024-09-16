@@ -86,6 +86,15 @@ documents...). You can put anything in this directory.
 It is a very good idea to save all data and meta-data related to your
 project in this directory.
 
+## Exercise 0: Create a new project
+
+Now create a new project in Rstudio. 
+
+ * Go to File -> New Project
+ * Select New Directory -> New Project
+ * Give the project a name (e.g. "RcrashCourse")
+ * Click on "Create Project"
+
 ## Workspaces
 
  Workspace is basically a folder which contains a few special files in
