@@ -149,3 +149,5 @@ abline(h=0.5, col="grey")
 
 ls("package:ggplot2")
 
+### end of day 1
+### have a great afternoon!
