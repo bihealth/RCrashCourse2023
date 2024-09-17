@@ -126,6 +126,7 @@ m[ , 2]
 
 # select more than one column
 m[ , 1:2]
+m[ , c(1, 3)]
 
 # same as simply m
 m[ , ]
@@ -172,3 +173,104 @@ aeas
 
 # out of bonds
 m[ , 54 ]
+
+## plate exercise
+
+levs <- c("ctrl", "low", "high")
+inhs <- rep(paste0("Inh", 2:3), each=3)
+drugSensitivity <- matrix(runif(48), nrow=6)
+colnames(drugSensitivity) <- c("border1", paste0(inhs, "_", levs), "border2")
+rownames(drugSensitivity) <- c("border", 
+                               paste0("Inh1_", c("ctrl", "low", "mid", "high")), 
+                               "border")
+# lists
+
+person <- list(name="Weiner", 
+               Age=c(1, 2, 42, 123), 
+               given="January")
+person$Age * 2
+length(person$Age)
+
+# adding and removing elements of a list
+person$city <- c("Berlin", "Hoppegarten", "Krakow")
+person$city <- NULL
+
+person <- list("Weiner", 
+               c(1, 2, 42, 123), 
+               "January")
+person[[1]]
+
+
+
+testres <- t.test(rnorm(10), rnorm(10, mean=2))
+testres$p.value
+
+# this works
+testres$p.value * 100
+testres[["p.value"]] * 100
+
+testres["p.value"]
+# this will not work
+testres["p.value"] * 10
+
+
+# data frames
+
+names <- c("January", "Manuela", "Bill")
+lastn <- c("Weiner", "Benary", "Gates")
+age   <- c(1001, NA, 65)
+
+d <- data.frame(names=names, last_names=lastn, age=age)
+
+# the following are the same
+
+# selecting columns OFTEN returns a vector
+d[,1]
+
+# this ALWAYS returns a vector
+# these three are always used to access only one column
+d$names
+d[["names"]]
+d[[1]]
+
+d$names[1:2]
+
+# selecting rows ALWAYS returns another data frame
+d[ 1, ]
+
+class(d)
+class(d[,1])
+class(d[,3])
+
+## adding a column
+d$city <- c("Hoppegarten", "Berlin", "Seattle")
+# change the order of columns
+d2 <- d[ , c("last_names", "names", "age")]
+
+d$city <- NULL
+
+
+
+# checking the type of your data
+class(d)
+class(1:10)
+typeof(d)
+typeof(1:10)
+is.data.frame(d)
+is.list(d)
+is.matrix(d)
+is.numeric(d)
+is.integer(pi)
+is.numeric(pi)
+
+class(person)
+is.data.frame(person)
+is.list(person)
+
+class(d$names)
+class(d$age)
+
+summary(d)
+summary(d$age)
+summary(d$names)
+summary(person)
