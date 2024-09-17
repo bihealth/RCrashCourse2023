@@ -9,7 +9,7 @@
 
 
 
-  <meta name="date" content="2024-09-16" />
+  <meta name="date" content="2024-09-17" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -3270,7 +3270,7 @@ background: #70ACC0;
       <h1 data-config-title><!-- populated from slide_config.json --></h1>
       
       <p data-config-presenter><!-- populated from slide_config.json --></p>
-            <p style="margin-top: 6px; margin-left: -2px;">2024-09-16</p>
+            <p style="margin-top: 6px; margin-left: -2px;">2024-09-17</p>
           </hgroup>
   </slide>
 
@@ -3544,7 +3544,7 @@ as.character(f_teachers)</pre>
 b &lt;- c(1,10, 
 20, 21, 5)
 
-r&lt;-sqrt((b-mean(b))^2/a)</pre></div>
+r&lt;-sqrt(sum((b-mean(b))^2)/a)</pre></div>
 
 <div style="float: right; width: 5%;">
 </div>
@@ -3563,7 +3563,7 @@ samples_mean &lt;- mean(samples)
 samples_devs &lt;- samples - samples_mean
 
 # samples variance
-samples_var  &lt;- samples_devs^2 / (samples_n - 1)
+samples_var  &lt;- sum(samples_devs^2) / (samples_n - 1)
 
 samples_sd   &lt;- sqrt(samples_var)
 

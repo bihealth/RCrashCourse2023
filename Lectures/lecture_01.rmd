@@ -290,7 +290,7 @@ a <- 5
 b <- c(1,10, 
 20, 21, 5)
 
-r<-sqrt((b-mean(b))^2/a)
+r<-sqrt(sum((b-mean(b))^2)/a)
 
 ```
 
@@ -315,7 +315,7 @@ samples_mean <- mean(samples)
 samples_devs <- samples - samples_mean
 
 # samples variance
-samples_var  <- samples_devs^2 / (samples_n - 1)
+samples_var  <- sum(samples_devs^2) / (samples_n - 1)
 
 samples_sd   <- sqrt(samples_var)
 
