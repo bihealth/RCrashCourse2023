@@ -250,7 +250,6 @@ d2 <- d[ , c("last_names", "names", "age")]
 d$city <- NULL
 
 
-
 # checking the type of your data
 class(d)
 class(1:10)
@@ -274,3 +273,15 @@ summary(d)
 summary(d$age)
 summary(d$names)
 summary(person)
+
+# Exercise 2.3
+
+mat <- matrix(rnorm(15), nrow = 5)
+mat
+df <- as.data.frame(mat)
+df
+rownames(df) <- letters[1:5]
+colnames(df) <- c("blah", "bleh", "bluh")
+df$pstrem <- rep("A", 5)
+?seq
+df$sequence <- seq(0, 1, length.out = 5)
