@@ -27,8 +27,6 @@ knitr::opts_chunk$set(echo=TRUE,eval=FALSE,warning=FALSE,message=FALSE,fig.width
 
 Questions, anybody?
 
-Summary on the lilies exercise
-
 ## One more thing about vectors: named indices
 
 Elements of a vector can be accessed not only using numbers (indices) or
@@ -42,8 +40,17 @@ person["FirstName"]
 person["Age"]
 ```
 
+## And yet another thing about vectors
 
-## Functions in R: a brief introduction
+Vectors *always* have only one type of data. If you mix strings and numbers,
+R will convert all elements to strings.
+
+```{r eval=FALSE,echo=TRUE,error=TRUE}
+person <- c(10, 20, "30")
+person * 10
+```
+
+## Functions in R: a brief reminder
 
 ```{r eval=FALSE,echo=TRUE}
 samples   <- c(1, 10, 23, 42, 13)
@@ -56,7 +63,8 @@ of them) and return a single object: a vector, a matrix or something else.
  * You can always assign the result of the function to a variable.
 
  * Sometimes functions return `NULL`, which is R for "nothing", but which is
-still something you can use or assign.
+still something you can use or assign (yet another special value! we will
+meet it again later).
 
 ## Logical vectors
 
@@ -89,18 +97,27 @@ persons <- c("Aphrodite", "Bacchus", "Circe", "Demeter", "Eurypides")
 sel     <- c(TRUE, TRUE, TRUE, TRUE, FALSE)
 persons[sel]
 
-# we can abbreviate the TRUE and FALSE to T and F (avoid)
+# we can abbreviate the TRUE and FALSE to T and F (but try to avoid it!)
 greek <- persons[ c(T, F, T, T, T) ]
 ```
 
-* `https://youtu.be/xmeZofFlp78`
+The reason to avoid using the `T` and `F` is that they can be overwritten
+by the user, and then you will have a hard time debugging your code.
 
-* Back to the lilies - how do you change all values which are greater than 1 to 1?
 
-## Exercise 2.1: more on vectors and functions, introducing NA
+```{r eval=FALSE,echo=TRUE}
+T <- FALSE
+persons[ c(T, F, T, T, T) ]
+```
+
+
+* Logical subscripts video: `https://youtu.be/xmeZofFlp78` (8.4 minutes)
+
+
+## Exercise 2.1: more on vectors and functions, reminder on NA
+
 
 Create a vector as follows:
-
 
 ```{r echo=TRUE,eval=FALSE}
 samples <- c(1, 10, NA, 15)
@@ -114,8 +131,9 @@ samples <- c(1, 10, NA, 15)
  * use the **named parameter** `na.rm=TRUE` for the `mean()` function. Look
    up help (`?mean`) to see how it can be used. What happens now?
  * what does the `is.na()` function return when applied to `samples`?
- * how do you find `NA` values? Use `is.na` and `which`
+ * how do you find `NA` values? Try `is.na` and `which`
  * How do you select only these samples which are not `NA`?
+ * Back to the lilies - how would you change all values which are greater than 1 to 1?
  
 ## Extra (if you are bored): Creating a function
 
@@ -141,6 +159,36 @@ some_name <- function(param1, param2=2) {
       supposed to use or modify anything that they have not been passed to
       explicitely (sometimes hard to avoid)
 
+## The `rep` and `paste`/`paste0` functions
+
+`rep` is used to replicate vectors. It is a very useful shorthand when you
+need to generate e.g. experimental conditions.
+
+```{r eval=FALSE,echo=TRUE}
+rep(c("A", "B"), 5)
+rep(c("A", "B"), each=5)
+```
+
+## The `rep` and `paste`/`paste0` functions
+
+`paste` and `paste0` are used to concatenate strings. `paste` adds a space
+between the strings, `paste0` does not.
+
+```{r eval=FALSE,echo=TRUE}
+paste("A", "B", "C")
+paste0("A", "B", "C")
+
+a <- c("A", "B", "C")
+b <- c("1", "2", "3")
+paste0(a, b)
+```
+
+Together, these functions are really useful to generate, for example,
+labels, experimental conditions, names of files etc.
+
+## Exercise 2.1b
+
+Exercise: using rep and paste, create a vector like this: `A1, A2, A3, B1, B2, B3, C1, C2, C3`
 
 # Complex data structures
 
@@ -151,11 +199,11 @@ some_name <- function(param1, param2=2) {
  * lists
  * data frames
 
-## Data matrices
+## Matrices
 
 ![](images/wellplate.jpeg){ height=500px }
 
-## Data matrices
+## Matrices
 
 Much like vectors, matrices can only hold one data type (e.g. only numeric
 or only character or only logical etc.).
@@ -181,6 +229,8 @@ m[, 2] # vector which is the first column
 m[3, 1] # first element of the third row
 ```
 
+Note: it is also possible to have arrays with more than 2 dimensions (but
+you will probably not need them).
 
 ## Row and column names
 
@@ -196,6 +246,8 @@ m["B", ]     # one row
 m[   , "b"]  # one column
 ```
 
+`letters` and `LETTERS` are built-in vectors with the (English) alphabet.
+Useful for quick labeling stuff.
 
 ## Remember
 
@@ -335,7 +387,7 @@ vectors can hold only one type of data.
    frame. If you select a single column, you get a vector.
  * In tibble, you always get a smaller tibble.
  
- * `https://youtu.be/eWu7kvNBpyc`
+ * `https://youtu.be/eWu7kvNBpyc` (9.2 minutes)
 
 
 ## Exercise 2.3
@@ -346,20 +398,6 @@ vectors can hold only one type of data.
  * Add a column. Each value in the column should be "A" (a string). Use the
    `rep` function for that.
  * Add a column with five numbers from 0 to 1. Use the `seq` function for that.
-
-## Using rep
-
-`rep()` is used to replicate vectors.
-
-```{r}
-rep(c("A", "B"), 5) 
-# result:
-#  [1] "A" "B" "A" "B" "A" "B" "A" "B" "A" "B"
-
-rep(c("A", "B"), each=5)
-# result
-# [1] "A" "A" "A" "A" "A" "B" "B" "B" "B" "B"
-```
 
 
 ## Summarizing all those brackets 
