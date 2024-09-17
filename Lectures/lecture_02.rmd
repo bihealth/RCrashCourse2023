@@ -312,6 +312,21 @@ There is a shortcut:
 person$name
 ```
 
+## Creating and removing elements
+
+
+You can add elements to a list using the `$` operator:
+
+```{r eval=FALSE,echo=T}
+person$city <- c("Berlin", "Hoppegarten")
+```
+
+You can remove elements by assigning the NULL value to them:
+
+```{r eval=FALSE,echo=T}
+person$city <- NULL
+```
+
 ## Accessing lists {.columns-2}
 
 ![](images/clothesline_2.png){ height=300px }
@@ -363,6 +378,20 @@ d$lastn[1]
 However, note that when you select a row, you will get a data frame, not a
 vector. This is because each of the column can be of different type, and
 vectors can hold only one type of data.
+
+## Creating new columns and removing columns
+
+You can add new columns to a data frame using the `$` operator:
+
+```{r}
+d$city <- c("Hoppegarten", "Berlin", "Seattle")
+```
+
+You can remove columns by assigning the NULL value to them:
+
+```{r}
+d$city <- NULL
+```
 
 ## Matrices vs data frames
 
