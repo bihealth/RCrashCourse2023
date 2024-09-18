@@ -208,11 +208,17 @@ summary(myiris$`Sepal Length`)
 
 (we use the back ticks because the column name contains a space)
 
+## table() for constructing contingency tables
+
+
+```{r eval=TRUE,results="markdown"}
+table(myiris$Species)
+```
+
 ## Diagnosing problems
 
  * The colorDF package provides a function called `summary_colorDF` which
    can be used to diagnose problems with different flavors of data frames:
-
 
 ```{r eval=TRUE,results="markdown",R.options=list(width=100)}
 library(colorDF)
@@ -517,9 +523,9 @@ removes existing row names on data frames.
 
 ## Wide and Long format (demonstration)
 
- * https://youtu.be/NO1gaeJ7wtA
- * https://youtu.be/v5Y_yrnkWIU
- * https://youtu.be/jN0CI62WKs8
+ * https://youtu.be/NO1gaeJ7wtA (introduction, 9 minutes)
+ * https://youtu.be/v5Y_yrnkWIU (wide to long, 6 minutes)
+ * https://youtu.be/jN0CI62WKs8 (long to wide, 4 minutes)
 
 
 ## Wide and Long format
