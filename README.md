@@ -26,7 +26,6 @@ To view HTML files, use the following links:
      * [Video: tibbles vs data frames, 10 minutes](https://youtu.be/eWu7kvNBpyc)
 
 
-<!-- 
  * [Lecture 3](https://bihealth.github.io/RCrashCourse2023/Lectures/lecture_03.html): Reading and cleaning data; reshaping data frames
      * [Video: wide vs long format, 9 minutes](https://youtu.be/NO1gaeJ7wtA)
      * [Video: converting from wide to long, 6 minutes](https://youtu.be/v5Y_yrnkWIU)
@@ -34,6 +33,7 @@ To view HTML files, use the following links:
      * [Video: introduction to regular expressions, 15 minutes](https://youtu.be/ukN59iCo5wc)
 
 
+<!-- 
  * [Lecture 4](https://bihealth.github.io/RCrashCourse2023/Lectures/lecture_04.html): Searching in data; combining data frames
      * [Video: ggplot2 vs base R, 6 min](https://youtu.be/NnxJyCHrUTE)
 
