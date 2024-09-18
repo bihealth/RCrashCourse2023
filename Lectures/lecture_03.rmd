@@ -33,15 +33,15 @@ Main data types you will encounter:
 ---------------------------- ------------------------------- ------------------------------- --------------------------
 Data type                    Function                        Package                         Notes
 ---------------------------- ------------------------------- ------------------------------- --------------------------
-Columns separated by spaces  `read_table()`                  `readr`                         one or more
+Columns separated by spaces  `read_table()`                  `readr`/`tidyverse`             one or more
                                                                                              spaces separate 
                                                                                              each column
                                                              
-TSV / TAB separated values   `read_tsv()`                    `readr`                         Delimiter is tab (`\t`).
+TSV / TAB separated values   `read_tsv()`                    `readr`/`tidyverse`             Delimiter is tab (`\t`).
                                                              
-CSV / comma separated        `read_csv()`                    `readr`                         Comma separated values
+CSV / comma separated        `read_csv()`                    `readr`/`tidyverse`             Comma separated values
                                                                                              
-Any delimiter                `read_delim()`                  `readr`                         Customizable
+Any delimiter                `read_delim()`                  `readr`/`tidyverse`             Customizable
                                                              
 XLS (old Excel)              `read_xls()`                    `readxl`                        Just don't use it.
                              `read_excel()`                                                  From the
@@ -72,7 +72,7 @@ tidyverse functions above are preferable.
  
  * Downloading files from our git-repository
 
-## Excercise 3.1
+## Exercise 3.1
 
 Read, inspect the following files:
 
@@ -80,11 +80,16 @@ Read, inspect the following files:
  * `iris.csv`
  * `meta_data_botched.xlsx` 
 
- 1. Which functions would you use? 
- 1. What kind of issues can you detect?
- 1. Suggestions of solving the issues?
+Which functions would you use? 
  
-The function `readxl_example("deaths.xls")` returns a file name. Read this file. How can you omit the lines at the top and at the bottom of the file?
+The function `readxl_example("deaths.xls")` returns a file name. Read this file: 
+
+```{r}
+fn <- readxl_example("deaths.xls")
+data <- read_excel(fn)
+```
+
+How can you omit the lines at the top and at the bottom of the file?
 (hint: `?read_excel`). How can you force the date columns to be interpreted
 as dates and not numbers?
 
@@ -92,11 +97,7 @@ as dates and not numbers?
 ## Tibbles / readxl
 
 tibbles belong to the tidyverse. They are nice to work with and very
-useful, but we can stick to data frames for now. Therefore, do
-
-```{r}
-mydataframe <- as.data.frame(read_xlsx("file.xlsx"))
-```
+useful. Also, they are *mostly* identical to data frames. 
 
 One crucial difference between tibble and data frame is that `tibble[ , 1 ]` 
 returns a tibble, while `dataframe[ , 1]` returns a vector. The second
@@ -131,6 +132,23 @@ crucial difference is that it does not support row names (on purpose!).
   * brace yourself for bad times
   * get used to nasty remarks
 
+## Standardising column names
+
+Column names should be uniform. 
+
+ * They should not contain other characters than alphanumeric and underscore
+ * Dots are allowed, but not recommended ("old style")
+ * They should not contain spaces. 
+ * They should start with a letter
+
+You can use the janitor package to clean up column names:
+
+```{r}
+library(janitor)
+data <- read_csv("data.csv")
+data <- clean_names(data)
+```
+
 ## Diagnosing problems
 
 Potential problems:
@@ -148,7 +166,6 @@ Potential problems:
 
  * tidyverse reading functions provide a summary on the reading process,
    e.g.:
-
 
 ```{r eval=TRUE,results="markdown"}
 library(tidyverse)
@@ -191,16 +208,10 @@ summary(myiris$`Sepal Length`)
 
 (we use the back ticks because the column name contains a space)
 
-
-
-
 ## Diagnosing problems
 
  * The colorDF package provides a function called `summary_colorDF` which
    can be used to diagnose problems with different flavors of data frames:
-
-
-
 
 
 ```{r eval=TRUE,results="markdown",R.options=list(width=100)}
@@ -208,11 +219,75 @@ library(colorDF)
 summary_colorDF(myiris)
 ```
 
+## Exercise 3.2: Diagnosing problems
+
+ * Read the data file `iris.csv` using the `read_csv` function. Spot the
+   problems. How can we deal with them?
+ * Read the data file `meta_data_botched.xlsx`. Spot
+   the errors. How can we deal with them?
+
 ## Mending problems
+
+ * Use logical vectors to substitute values which are incorrect
+ * Use logical vectors to filter out rows which are incorrect
+ * Enforce a data format with `as.numeric`, `as.character`, `as.factor` etc.
+ * Use regular expressions to search and replace
+
+## Mending problems with logical vectors
+
+Use logical vectors to substitute values which are incorrect:
+
+```{r}
+nas <- is.na(some_df$some_column)
+some_df$some_column[nas] <- 0
+```
+
+ * `is.na` returns a logical vector of the same length as the input vector
+ * `some_df$some_column[nas]` returns only the values which are `NA`
+ * `some_df$some_column[nas] <- 0` replaces the `NA` values by `0`
+
+## Mending problems with logical vectors
+
+Use logical vectors to substitute values which are incorrect:
+
+
+```{r}
+to_replace <- some_df$some_column == "male"
+some_df$some_column[to_replace] <- "M"
+```
+
+ * `some_df$some_column == "male"` returns a logical vector with `TRUE` for
+   all values which are equal to "male"
+ * we then can replace them with a standardized value
+
+## Mending problems through filtering
+
+ * Filtering the data: see tomorrow
+
+## Mending problems by enforcing a data format
+
+Use as.numeric, as.character, as.factor etc. to enforce a data format:
+
+```{r}
+some_df$some_column <- as.numeric(some_df$some_column)
+```
+
+ * `as.numeric` converts a vector to numeric values
+ * `as.character` converts a vector to character values
+ * `as.factor` converts a vector to a factor
+
+Note: dates are special case. If you are in a pinch, take a look at the
+`lubridate` package.
+
+# Search and replace with regular expressions
+
+## Mending problems by search and replace
+
+Regular expressions are a powerful tool to search and replace, not only for
+mending / cleaning data, but also for data processing in general.
 
  * find the incorrect values
  * replace incorrect values (by search and replace)
- * enforcing a particular data type (e.g., converting strings to numbers)
  * [Video: introduction to regular expressions, 15 minutes](https://youtu.be/ukN59iCo5wc)
 
 ## Using patterns to clean data
@@ -226,8 +301,8 @@ summary_colorDF(myiris)
 
 ## Substitutions (search & replace)
 
- * `gsub(string1, string2, text)` substitute all occurences of `string1` in
-    by `string2` in `text`
+ * `gsub(pattern, string, text)` substitute all occurences of `pattern` in
+    by `string` in `text`
  * `sub(...)` same, but only the first occurence
 
 ```{r}
@@ -290,9 +365,7 @@ group <- c("Control", " control", "control ", "Control   ")
 group1 <- trimws(group)
 group2 <- tolower(group1)
 
-## sin(log(tan(pi)))
 group <- tolower(trimws(group))
-
 ```
 
 
@@ -385,7 +458,7 @@ vec <- gsub("^m.*", "Mouse", vec)
 vec <- gsub("S*chicken", "Chicken", vec)
 ```
 
-## Exercise 3.2
+## Exercise 3.3
 
  * Use gsub to make the following uniform: `c("male", "Male ", "M", "F", "female", " Female")`
  * Using `gsub` and the `toupper` function, clean up the gene names such
@@ -397,7 +470,7 @@ vec <- gsub("S*chicken", "Chicken", vec)
 ## Using regular expressions to clean tables 
 
 
-## Exercise 3.3
+## Exercise 3.4
 
  * Read the data file `iris.csv` using the `read_csv` function. Spot and correct errors.
  * If you have time: Read the data file `meta_data_botched.xlsx`. Spot and correct errors.
@@ -444,7 +517,7 @@ removes existing row names on data frames.
 
 ## Wide and Long format (demonstration)
 
- * https://youtu.be/NO1gaeJ7wtA`
+ * https://youtu.be/NO1gaeJ7wtA
  * https://youtu.be/v5Y_yrnkWIU
  * https://youtu.be/jN0CI62WKs8
 
@@ -506,7 +579,7 @@ pivot_wider(long, names_from="condition", values_from="measurement")
 pivot_wider(long, id_cols="subject", names_from="condition", values_from="measurement")
 ```
 
-## Exercise 3.4
+## Exercise 3.5
 
 Convert the following files to long format:
 
