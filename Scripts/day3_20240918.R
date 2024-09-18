@@ -80,8 +80,74 @@ sel <- meta_data_botched$SEX %in% c("male", "MALE", "Male", "mael", "männlich")
 meta_data_botched$SEX[which(sel)] <- "M"
 
 
-
+# writing to files
 library(writexl)
 write_xlsx(meta_data_botched, "meta_data_botched_JW_20240918_v1.xlsx")
 
+grep("2\\[5", c("12[5", "2x5"))
 
+print(scdf(meta_data_botched), n = Inf)
+
+# contingency tables
+table(meta_data_botched$ARM, meta_data_botched$PLACEBO)
+
+# one more trick
+table(meta_data_botched$PLACEBO)
+
+# rather than work on the column directly,
+# create a copy and work on the copy
+placebo <- meta_data_botched$PLACEBO
+placebo[ placebo == 0 ] <- "NO"
+placebo[ placebo == 1 ] <- "YES"
+table(placebo)
+placebo <- gsub("yes", "YES", placebo, ignore.case = TRUE)
+table(placebo)
+placebo <- gsub("no", "NO", placebo, ignore.case = TRUE)
+table(placebo)
+
+# check whether the copy is OK
+table(placebo, meta_data_botched$PLACEBO)
+table(placebo, meta_data_botched$ARM)
+
+# insert the copy into the original column
+meta_data_botched$PLACEBO <- placebo
+
+# correcting ARM
+# again, make a copy
+arm <- meta_data_botched$ARM
+table(arm)
+arm[ arm == "control" ] <- "PLACEBO"
+table(arm)
+arm <- gsub("^A.*", "AGRIPPAL", arm)
+arm <- gsub("^P.*", "PLACEBO", arm)
+arm <- gsub("^F.*", "FLUAD", arm)
+table(arm)
+table(arm, placebo)
+meta_data_botched$ARM <- arm
+
+
+## trimws (trim whitespace), tolower, toupper
+example <- c(" as df", "asdf", "  asdf    ")
+trimws(example)
+
+example <- c("No", "NO", "no")
+tolower(example)
+toupper(example)
+
+# exercise 3.3
+example <- c("male", "Male ", "M", "F", "female", " Female")
+example <- trimws(example)
+example <- toupper(example)
+# one solution
+# example <- gsub("^M.*", "MALE", example)
+# example <- gsub("^F.*", "FEMALE", example)
+# one more trick (idiom)
+example <- gsub("^([MF]).*", "\\1", example)
+example
+example <- c("ankrd22", "ifng", "Nf-kb", " Cxcl 5", "CCL 6.", "ANK.r.d. 12")
+example <- toupper(example)
+example <- gsub("[- .]", "", example)
+example <- gsub("[^A-Z0-9]", "", example)
+example
+example <- c("ANKRD22", "ANKEN", "ank.rep.domain 12", "ifng-1", "ANKRD-33", "  ankrd23", "MAPK")
+grep("^ *ANK.*R.*D.*[0-9]+$", example, ignore.case = TRUE)
