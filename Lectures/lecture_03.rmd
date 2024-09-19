@@ -62,6 +62,14 @@ Note: there are also "base R" functions `read.table`, `read.csv`,
 `read.tsv` (there is no function for reading XLS[X] files in base R). The
 tidyverse functions above are preferable.
 
+## Reading data
+
+ * For reading text files (csv, tsv etc.), use the `readr` package. This
+   package is loaded automatically when you load the `tidyverse` package:
+   `library(tidyverse)`. Then, use the functions `read_csv`, `read_tsv` etc.
+ * For reading Excel files, use the `readxl` package: `library(readxl)`.
+   Then, use the function `read_excel`.
+
 ## Where are your files - absolute vs relative paths
 
  * absolute path start at root directory, e.g.  
@@ -208,12 +216,27 @@ summary(myiris$`Sepal Length`)
 
 (we use the back ticks because the column name contains a space)
 
-## table() for constructing contingency tables
+## `table()` for overview
 
+When used with one argument, `table` shows how many times each value
+occurs:
 
 ```{r eval=TRUE,results="markdown"}
 table(myiris$Species)
 ```
+
+## `table()` for constructing contingency tables
+
+When used with two arguments, `table` constructs a contingency table:
+
+```{r eval=TRUE,results="markdown"}
+library(readxl)
+meta_data <- read_excel("../Datasets/meta_data_botched.xlsx")
+table(meta_data$PLACEBO, meta_data$ARM)
+```
+
+This can tell us if there are any inconsistencies in the data.
+
 
 ## Diagnosing problems
 
