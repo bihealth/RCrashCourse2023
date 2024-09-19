@@ -25,76 +25,104 @@ library(zoo)
 library(RColorBrewer)
 ```
 
-## Wide vs long format continued ...
-
- * https://youtu.be/NO1gaeJ7wtA
- * https://youtu.be/v5Y_yrnkWIU
- * https://youtu.be/jN0CI62WKs8
-
- Long advantages:
-
-  * easier to filter, process, visualize, do statistics with
-  * focused on measurement ("patient ID" or equivalent is a covariate, and so is measurement type)
- 
- Wide advantages:
-
-  * groups data by a covariate ("patient ID")
-  * can be easier to manage (each column one measurement type)
-  
-## Exercise 4.1
-
-Convert the following files to long format:
-
- * `labresults_wide.csv`
- * The iris data set (`data(iris)`)
- * `cars.xlsx` (tricky!)
-
-Discuss how to clean up and convert to long format (what seems to be the problem? How do
-we deal with that?):
-
- * `mtcars_wide.csv`
-
 ## Aims for today
 
-* Pipes - writing readable code
 * Searching, sorting and selecting
 * Matching and merging data
-* Visualization
+* Pipes - writing readable code
+* Wide and long format
 
 ![](images/data-science.png){ width=600px }
 
-# Pipes in R
 
-## Nested function calls vs piping
+# Selecting columns
 
-```{r eval=TRUE, echo=FALSE, message=FALSE}
-iris <- read_csv("Datasets/iris.csv")
-iris <- janitor::clean_names(iris)
+## Selecting columns of data frames
+
+If we want the actual column, we use the `$` operator:
+
+```{r}
+df <- data.frame(a=1:5, b=6:10, c=11:15, d=16:20)
+df$a
 ```
+
+However, what if we want to select multiple columns?
+
+## Selecting multiple columns
+
+First, the old way:
+
+```{r}
+# select columns 1 to 2
+df2 <- df[ , 1:2]
+
+# select anything but column 2
+df2 <- df[ , -2]
+
+# select columns a and c
+df2 <- df[ , c("a", "c")]
+
+# select columns a and c, but in reverse order
+df2 <- df[ , c("c", "a")]
+```
+
+This is very similar to what we did when dealing with matrices, and
+actually similar to how we select elements from a vector.
+
+## Selecting columns using tidyverse
+
+Tidyverse has the `select` function, which is more explicit and readable.
+It also has extra features that make it easier to work with!
+
+```{r}
+library(tidyverse)
+# select columns a and c
+df2 <- select(df, a, c)
+
+# select columns a to c
+df2 <- select(df, a:c)
+
+# select anything but column b
+df2 <- select(df, -b)
+```
+
+Note: **This only works with tidyverse functions!"**
+
+## Tidyverse and quotes
 
 
 ```{r}
-# from Exercise 3.3
-iris$petal_length <- gsub("[a-z]", "", iris$petal_length) 
-iris$petal_length <- gsub(",", ".", iris$petal_length)
-iris$petal_length <- as.numeric(iris$petal_length)
-
-iris$petal_length |> 
-  str_remove("[a-z]", "") |> 
-  str_replace(",", ".") |> 
-  as.numeric()
-  
+select(df, a, c)
 ```
 
+Note the lack of quotes around `a` and `c`! This is a feature in tidyverse which
+has two effects:
 
-# Searching, sorting and selecting
+ * it is easier to type (you save the typing of `df$""`!
+   imagine how much time you have now)
+ * it is confusing for beginners ("why are there no quotes?", "when should
+   I use quotes and when not?", "how does it know that it is `df$a` and
+   not some other `a`?") 
+ * makes programming confusing (what if
+   "a" holds the *name* of the column that you would like to sort by? -
+   use `.data[[a]]`; Or is some other vector by which you wish to sort?)
+
+## Exercise 4.1
+
+ * Read the file 'Datasets/transcriptomics_results.csv'
+ * What columns are in the file?
+ * Select only the columns 'GeneName', 'Description', 'logFC.F.D1' and 'qval.F.D1'
+ * Rename the columns to 'Gene', 'Description', 'LFC' and 'FDR'
+
+# Sorting and ordering
 
 ## sort and order (base R - not covered in the course)
 
 `sort` directly sorts a vector:
 
-```{r}
-v <- sample(1:10)/10 # randomize numbers 1-10
+```{r eval=TRUE}
+# randomize numbers 0.1, 0.2, ... 1
+v <- sample(1:10)/10 
 sort(v)
 
 ## decreasing 
@@ -104,19 +132,24 @@ sort(v, decreasing=TRUE)
 rev(sort(v))
 ```
 
+## sort and order cont.
+
 However, `order` is more useful. It returns the *position*
 of a value in a sorted vector.
 
-```{r}
+```{r eval=TRUE, results="markdown"}
 order(v)
 order(v, decreasing=TRUE)
 ```
+
+Think for a moment what happens here.
+
 
 ## sort and order cont.
 
 `sort` and `order` can be applied to character vectors as well:
 
-```{r}
+```{r, eval=TRUE, results="markdown"}
 l <- sample(letters, 10)
 sort(l)
 order(l, decreasing=TRUE)
@@ -125,10 +158,23 @@ order(l, decreasing=TRUE)
 Note that sorting values turned to a character vector will not give
 expected results:
 
-```{r}
+```{r, eval=TRUE, results="markdown"}
 v <- sample(1:200, 15)
 sort(as.character(v))
 ```
+
+## Using order to sort the data
+
+We can use the return value of `order` to sort the vector:
+
+```{r eval=TRUE,results="markdown"}
+v <- sample(1:10)/10 
+v[ order(v) ]
+```
+
+This is the same as `sort(v)`, but has a huge advantage: we can use it sort
+*another* vector, matrix, list, data frame etc.
+
 
 ## Sorting data frames (using order)
 
@@ -149,7 +195,8 @@ For numeric values, instead of `decreasing=TRUE`, you can just order by
 
 ## Sorting data frames with tidyverse
 
-Sorting with tidyverse is easier. 
+Sorting with tidyverse is easier (but comes at a cost -
+you need to know tidyverse functions):
 
 ```{r}
 arrange(df, val)
@@ -161,25 +208,15 @@ arrange(df, desc(val))
 arrange(df, desc(abs(val))) 
 ```
 
-## Sorting data frames with tidyverse
+Note: **no quotes around column names!**
 
+## Why both?
 
-```{r}
-arrange(df, val)
-```
+ * `order` is more flexible and can be used for any type of data
+ * `arrange` is easier to use and is more readable, but only works with
+   data frames
 
-Note the lack of quotes around `val`! This is a feature in tidyverse which
-has two effects:
-
- * it is easier to type (you save the typing of `df$`!
-   imagine how much time you have now)
- * it is confusing for beginners ("why are there no quotes?", "when should
-   I use quotes and when not?", "how does it know that it is `df$val` and
-   not some other `val`?") 
- * makes programming confusing (what if
-   "val" holds the *name* of the column that you would like to sort by? -
-   use `.data[[val]]`; Or is some other vector by which you wish to sort?)
-
+You should know both!
 
 ## Example
 
@@ -188,18 +225,10 @@ has two effects:
 res <- read_csv("Datasets/transcriptomics_results.csv")
 
 ## only a few interesting columns
-res <- res[ , c(3, 5, 8:9) ]
-colnames(res) <- c("Gene", "Description", "LFC", "p.value")
-```
+res <- select(res, GeneName, Description, logFC.F.D1, qval.F.D1)
 
-
-## Example cont.
-
-We can use sort, factor and level to find out more about our data set:
-
-```{r}
-desc.sum <- summary(factor(res$Description))
-head(sort(desc.sum, decreasing=TRUE)) # using base R sorting
+## use new column names
+colnames(res) <- c("Gene", "Description", "LFC", "FDR")
 ```
 
 *Data from: Weiner, January, et al. "Characterization of potential
@@ -219,29 +248,28 @@ plot(res$LFC[1:250], type="b")
 # res <- res[ord, ]
 
 ## then, order by p-value
-res <- arrange(res, p.value)
+res <- arrange(res, FDR)
 plot(abs(res$LFC[1:250]), type="b")
-plot(res$p.value[1:250], type="b", log="y")
+plot(res$FDR[1:250], type="b", log="y")
 ```
-## Side-note on plotting 
 
- * [Video: ggplot2 vs base R, 6 min](https://youtu.be/NnxJyCHrUTE)
+# Filtering and subsetting
 
-## Selecting / filtering of data frames
+## Filtering of data frames
 
 There are two ways, both simple. In both of them, you need to have a
 logical vector that indicates which rows to keep and which to remove.
 
 ```{r eval=FALSE}
-keep <- res$p.value < 0.05
+keep <- res$FDR < 0.05
 res[ keep, ]
 
-## or
+## or, with tidyverse:
 
-filter(res, p.value < 0.05)
-## note that we don't have to type "res$p.value", 
-## see comment about tidyverse above
+filter(res, FDR < 0.05)
 ```
+
+**Note:** again, we don't use quotes around column names!
 
 ## Excercise 4.2
 
@@ -351,7 +379,7 @@ sel <- res$p.value < 0.01 & res$LFC > 0
 head(res[ sel, ])
 ```
 
-*Note: for long data frames, `head` shows only the first 6 rows.`*
+*Note:* for long data frames, head shows only the first 6 rows.`
 
 
 
@@ -370,6 +398,18 @@ res[sel, ] ## or: filter(res, sel)
 ```
 
 *Note: More on the `filter()` function and other tidyverse functions later.`*
+
+## Filtering with multiple conditions
+
+```{r}
+keep <- res$FDR < 0.05 & abs(res$LFC) > 1
+res[ keep, ]
+
+## or, with tidyverse:
+filter(res, FDR < 0.05, abs(LFC) > 1)
+filter(res, FDR < 0.05 & abs(LFC) > 1)
+```
+
 
 ## Excercise 4.3
 
@@ -486,4 +526,158 @@ The files `expression_data_vaccination_example.xlsx` and
  4. Use the subjects to merge the two data frames however you see fit. Note
     that there are multiple time points per subject and multiple
     measurements per subject and time point.
+
+# Pipes in R
+
+## Remember functions?
+
+ * Each function has an input and an output
+ * What function returns can be used as input to another function
+ * The following are equivalent:
+
+Step by step:
+
+```{r}
+a <- read_csv("file.csv")
+b <- clean_names(a)
+```
+
+All in one go - without saving intermediate results:
+
+
+```{r}
+b <- clean_names(read_csv("file.csv"))
+```
+
+This can quickly become unreadable!
+
+## Nested function calls vs piping
+
+```{r eval=TRUE, echo=FALSE, message=FALSE}
+library(janitor)
+iris <- read_csv("Datasets/iris.csv")
+iris <- clean_names(iris)
+```
+
+
+```{r}
+# from Exercise 3.3
+iris$petal_length <- trimws(iris$petal_length)
+iris$petal_length <- gsub("[a-z]", "", iris$petal_length) 
+iris$petal_length <- gsub(",", ".", iris$petal_length)
+iris$petal_length <- as.numeric(iris$petal_length)
+```
+
+We could do it all on one line:
+
+
+```{r}
+iris$petal_length <- as.numeric(
+  gsub(",", ".", 
+    gsub("[a-z]", "", 
+      trimws(iris$petal_length)
+    )
+  )
+)
+```
+
+However, this is hard to read and maintain.
+
+## Pipes
+
+Fortunately, there is a *dirty* trick that results in clean and readable
+code:
+
+```{r}
+iris$petal_length <- iris$petal_length |> 
+  str_remove("[a-z]", "") |> 
+  str_replace(",", ".") |> 
+  as.numeric()
+```
+
+Basically, `a |> f(b)` is the same as `f(a, b)`.
+
+*Note 1:* Rather than gsub, we use the `str_remove` and `str_replace`
+functions from the `stringr` package. This would not work with gsub!
+
+*Note 2:* in the older versions of R (earlier than 4.1.0), you can use the
+`magrittr` package to achieve the same effect using the `%>%` operator.
+
+# Wide and long format
+
+## Wide and Long format (demonstration)
+
+ * https://youtu.be/NO1gaeJ7wtA (introduction, 9 minutes)
+ * https://youtu.be/v5Y_yrnkWIU (wide to long, 6 minutes)
+ * https://youtu.be/jN0CI62WKs8 (long to wide, 4 minutes)
+
+
+## Wide and Long format
+
+ Long advantages:
+
+  * easier to filter, process, visualize, do statistics with
+  * focused on measurement ("patient ID" or equivalent is a covariate, and so is measurement type)
+ 
+ Wide advantages:
+
+  * groups data by a covariate ("patient ID")
+  * can be easier to manage (each column one measurement type)
+
+## Converting from wide to long:
+
+```{r}
+wide <- read.table(header=TRUE, text='
+ subject sex control cond1 cond2
+       1   M     7.9  12.3  10.7
+       2   F     6.3  10.6  11.1
+       3   F     9.5  13.1  13.8
+       4   M    11.5  13.4  12.9
+')
+pivot_longer(wide, cols=c("control", "cond1", "cond2"), 
+  names_to="condition", values_to="measurement")
+```
+
+
+
+## Converting from long to wide
+
+```{r}
+long <- read.table(header=TRUE, text='
+ subject  sampleID sex condition measurement
+       1  ID000001 M   control         7.9
+       1  ID000002 M     cond1        12.3
+       1  ID000003 M     cond2        10.7
+       2  ID000004 F   control         6.3
+       2  ID000005 F     cond1        10.6
+       2  ID000006 F     cond2        11.1
+       3  ID000007 F   control         9.5
+       3  ID000008 F     cond1        13.1
+       3  ID000009 F     cond2        13.8
+')
+```
+
+## Converting from long to wide
+
+```{r}
+## not what we wanted!!! Why?
+pivot_wider(long, names_from="condition", values_from="measurement")
+
+## Instead: 
+pivot_wider(long, id_cols="subject", names_from="condition", values_from="measurement")
+```
+
+## Exercise 4.1
+
+Convert the following files to long format:
+
+ * `labresults_wide.csv`
+ * The iris data set (`data(iris)`)
+ * `cars.xlsx` (tricky!)
+
+Clean up and convert to long format (what seems to be the problem? How do
+we deal with that?):
+
+ * `mtcars_wide.csv`
+
 
