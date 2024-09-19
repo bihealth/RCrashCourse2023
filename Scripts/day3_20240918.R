@@ -6,6 +6,9 @@ library(readxl)
 cars <- read_excel("../Datasets/cars.xlsx")
 exampleMutationalData <- read_csv("../Datasets/exampleMutationalData.csv")
 
+meta_data_botched <- read_excel("../Datasets/meta_data_botched.xlsx")
+View(meta_data_botched)
+
 # it is possible to read some files directly from a URL using the readr package
 foo <- read_csv("https://raw.githubusercontent.com/bihealth/RCrashCourse2023/main/Datasets/iris.csv")
 
@@ -151,3 +154,11 @@ example <- gsub("[^A-Z0-9]", "", example)
 example
 example <- c("ANKRD22", "ANKEN", "ank.rep.domain 12", "ifng-1", "ANKRD-33", "  ankrd23", "MAPK")
 grep("^ *ANK.*R.*D.*[0-9]+$", example, ignore.case = TRUE)
+
+
+## using janitor
+df <- data.frame(1, 2)
+colnames(df) <- c("ctrl+", "ctrl-")
+df
+library(janitor)
+clean_names(df)

@@ -33,10 +33,10 @@ To view HTML files, use the following links:
      * [Video: introduction to regular expressions, 15 minutes](https://youtu.be/ukN59iCo5wc)
 
 
-<!-- 
  * [Lecture 4](https://bihealth.github.io/RCrashCourse2023/Lectures/lecture_04.html): Searching in data; combining data frames
      * [Video: ggplot2 vs base R, 6 min](https://youtu.be/NnxJyCHrUTE)
 
+<!-- 
 
  * [Lecture 5](https://bihealth.github.io/RCrashCourse2023/Lectures/lecture_05.html): Visualisations, rmarkdown, Freestyle
      * [Video: introduction R markdown, 15 min](https://youtu.be/vBeGakSENi8)
