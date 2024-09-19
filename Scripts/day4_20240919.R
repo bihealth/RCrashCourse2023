@@ -221,3 +221,26 @@ df1 <- data.frame(subject.id=1:3, sex=c("M", "F", "F"),
 df2 <- data.frame(subject.id=rep(1:3, each=2), 
                   timepoint=rep(1:2, 3), value=rnorm(6))
 merge(df1, df2, by="subject.id")
+
+# exercise 4.3
+excel_sheets("../Datasets/expression_data_vaccination_example.xlsx")
+data <- read_xlsx("../Datasets/expression_data_vaccination_example.xlsx", sheet="targets")
+labres <- read_csv("../Datasets/labresults_full.csv")
+
+# unique values
+unique(labres$Timepoint)
+unique(labres$LBTEST)
+unique(labres$USUBJID)
+unique(data$USUBJID)
+
+data <- select(data, USUBJID, ARM, Timepoint, AGE, SEX)
+labres <- select(labres, USUBJID, LBORRES, LBTESTCD, LBTEST, Timepoint)
+
+merged_df <- merge(data, labres, by=c("USUBJID", "Timepoint"))
+
+# only BILI
+filter(merged_df, LBTESTCD == "BILI")
+
+# use pipes
+data <- read_xlsx("../Datasets/expression_data_vaccination_example.xlsx", sheet="targets") |>
+  select(USUBJID, ARM, Timepoint, AGE, SEX)
