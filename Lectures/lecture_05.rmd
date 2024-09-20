@@ -10,6 +10,10 @@ output:
     logo: files/logo_bihealth_en.png
 ---
 
+<style>
+.forceBreak { -webkit-column-break-after: always; break-after: column; }
+</style>
+
 ```{r,echo=FALSE,warning=FALSE,message=FALSE}
 ## Set default options for the knitr RMD processing
 knitr::opts_chunk$set(echo=TRUE,eval=FALSE,warning=FALSE,message=FALSE,fig.width=5,fig.height=5,cache=FALSE,autodep=TRUE, results="hide")
@@ -20,186 +24,172 @@ knitr::opts_knit$set(root.dir = "../")
 
 ## Aims for today
 
-* Combining multiple data sets / Merging
 * Creating your first report -> bringing together everything you learned
 * Introduction into statistics with R
+* Visualizing data
+* Your topics!
 
-# Matching data sets
-
-## Finding common IDs
-
-We can use `intersect()` for that.
-
-```{r}
-set1 <- letters[1:5]
-set2 <- letters[3:7]
-intersect(set1, set2)
-```
-
-
-## Merging
-
-A better, but more complex solution to merge two data frames is the
-`merge()` function.
-
-Some SQL terminology:
-
- * inner join: we are merging only common elements
- * outer join: we are making sure that elements from both sets are taken
-   over
- * left outer join: same, but only for the first set
- * right outer join: same, but only for the second set
-
-## Merging: create example data frames
-
-```{r}
-df1 <- data.frame(ID=sample(letters, 15), value1=rnorm(15))
-df2 <- data.frame(ID=sample(letters, 15), value2=rnorm(15))
-```
-
-
-## Merging (cont.)
-
-Usage of the `merge()` function:
-
-```{r}
-merge(df1, df2) # inner join by default
-merge(df1, df2, all.x=TRUE) # left outer join
-merge(df1, df2, all.y=TRUE) # right outer join
-merge(df1, df2, all=TRUE) # outer join
-```
-
-Note: tidyverse contains functions `inner_join`, `outer_join` etc. which
-look slightly more specific (but do the same).
-
-## Merging (cont.)
-
-The `by`, `by.x` and `by.y` parameters tell `merge` which columns contain
-the identifiers by which to join. It is always safer to specify this
-parameter!
-
-```{r}
-df1 <- data.frame(ID=c("a", "a", "b", "c"), no=c(1, 2, 3, 4), 
-  value=rnorm(4))
-df2 <- data.frame(ID=c("a", "a", "b", "c"), no=c(1, 2, 3, 4), 
-  value=rnorm(4))
-merge(df1, df2)           ## not what we wanted
-merge(df1, df2, by="ID")  ## not what we wanted
-merge(df1, df2, by=c("ID", "no"))
-
-inner_join(df1, df2, by = c("ID", "no")) # tidyverse option
-```
-
-## Merging (cont.)
-
-A simpler (but requiring more steps) alternative would be to make a new
-identifier:
-
-```{r}
-df1$ID2 <- paste(df1$ID, df1$no, sep=".")
-df2$ID2 <- paste(df2$ID, df2$no, sep=".")
-merge(df1, df2, by="ID2")
-```
-
-## Another example
-
-```{r}
-df1 <- data.frame(subject.id=1:3, sex=c("M", "F", "F"), 
-  age=c(28, 35, 29))
-df2 <- data.frame(subject.id=rep(1:3, each=2), 
-  timepoint=rep(1:2, 3), value=rnorm(6))
-merge(df1, df2, by="subject.id")
-```
-
-
-## Excercise 5.1
-
-The files `expression_data_vaccination_example.xlsx` and
-`labresults_full.csv` contain data from the same study.
-
- 1. read the first sheet from the XLSX file and the CSV file.
- 3. Which columns ID the subjects? Are there any subjects in common? How do
-    you match the subjects?
- 5. We are interested only in the following information: Subject ID, ARM
-    (group), Time point, sex, age, test name and the actual measurement.
-    Are the measurements numeric? Remember, you can use expressions like `[ , c("ARM", "sex") ]` 
-    to select the desired columns from a data set.
- 4. Use the subjects to merge the two data frames however you see fit. Note
-    that there are multiple time points per subject and multiple
-    measurements per subject and time point.
-
-
-## Exercise 5.2 - Explorative analysis
-
-After merging your data, we can now start with an exploratory analysis of this data. In particular, we are interested in the concentration of neutrophils over time and treatment.
-
- 1. Is your data frame consistent?
- 1. How can you filter the labresults for neutrophils?
- 1. Create a data frame in wide format with columns denoting the measurements over time?
- 1. Plot the distribution of neutrophils over time.
- 1. What kind of descriptive analysis would you do to get familiar with this data set?
-
+# Rmarkdown / Quarto
 
 ## Creating your first report - using Rmarkdown
 
  * Creating pretty tables -> Rmarkdown
-    * [Video: introduction R markdown, 15 min](https://youtu.be/vBeGakSENi8)
-    * [Video: basic document formatting in Rmarkdown documents, 9 minutes](https://youtu.be/rfMTn4NBDkQ)
-    * [Video: including references in Rmarkdown documents, 7 min](https://youtu.be/DUG1tEL5kXI)
-    * [kableExtra](https://cran.r-project.org/web/packages/kableExtra/vignettes/awesome_table_in_html.html)
-    
-    
-<!--    
-## Free style - your questions and projects 
+    * [Video: introduction R markdown](https://youtu.be/vBeGakSENi8) (15 min)
+    * [Video: basic document formatting in Rmarkdown documents](https://youtu.be/rfMTn4NBDkQ) (9 min)
+    * [optional: [Video: including references in Rmarkdown documents](https://youtu.be/DUG1tEL5kXI) (7 min) ]
+    * Nice tables with [kableExtra](https://cran.r-project.org/web/packages/kableExtra/vignettes/awesome_table_in_html.html)
 
- * heatmap: long vs wide format
-   * [pheatmap](https://davetang.github.io/muse/pheatmap.html)
-   * [ComplexHeatmap](https://jokergoo.github.io/ComplexHeatmap-reference/book/)
-     
+## Quarto vs Rmarkdown vs Markdown
+
+ * Markdown is a lightweight markup language with plain text formatting
+   syntax. This has nothing to do with R, it is about formatting only.
+ * Rmarkdown is a variant of Markdown that allows to include R code
+   that is executed and the results are included in the document.
+ * Quarto is a new document format that is based on Rmarkdown (and
+   backwards compatible) but has more features, looks nicer and is more
+   flexible. Quarto works with other languages as well, not only R.
+
+## The iris data set  {.columns-2 .smaller}
+
+  * Measurements of flowers of three species of iris
+  * 150 observations, 4 measurements each (sepal and petal width and length)
+  * Early machine learning (linear discriminant analysis)
+
+*Fisher RA. The use of multiple measurements in taxonomic problems. Annals
+of Eugenics. 1936 Sep;7(2):179-88.*
+
+<p class="forceBreak"></p>
+
+![Iris versicolor](images/1280px-Iris_versicolor_3.jpg){ width=300px }
+
+## Generating tables from data frames
+
+Simple tables:
+
+```{r eval=TRUE,results="markdown"}
+data(iris) # not necessary
+
+# generate table (idiom):
+knitr::kable(iris[ 1:10, ])
+```
+
+## Generating tables from data frames
+
+Nicely formatted tables:
+
+
+```{r eval=TRUE,results="markdown"}
+
+# generate table (idiom):
+pander::pander(iris[ 1:5, ])
+```
+
+(this looks much better in a Word document!)
+
+## Generating tables from data frames
+
+Interactive tables:
+
+```{r eval=TRUE,results="markdown"}
+library(DT)
+
+# generate table (idiom):
+datatable(iris[ 1:10, ], options = list(pageLength = 5))
+```
+
+## Exercise 5.1
+
+ * Create a new Rmarkdown document
+ * Add a title, author, date
+ * Add a table with the iris dataset
+ * Add a plot with the iris dataset
+ * Add a reference to the ggplot2 package
+ * Knit the document to HTML
+
+# Simple statistics with R
+
 ## Simple statistics (demo)
 
+ * descriptive statistics
  * t.test
  * PCA
 
-<!-- ## Descriptive statistics -->
+## Descriptive statistics
 
-<!-- `tapply(x, groups, func)` applies a function `func` to some data `x` -->
-<!-- grouped by `groups`. -->
+ * `summary` function(s)
+ * `summary_colorDF` function
+ * `mean`, `sd`, `var`, `median`, `quantile`, `range`, `min`, `max`
 
-<!-- ```{r, eval=TRUE} -->
-<!-- library(tidyverse) -->
-<!-- labwide <- read_csv("Datasets/labresults_wide_full.csv")[, -1 ] -->
-<!-- mean(labwide$NEUT) -->
-<!-- sd(labwide$NEUT) -->
+## Descriptive statistics
 
-<!-- tapply(labwide$NEUT, labwide$ARM, mean) -->
-<!-- tapply(labwide$NEUT, labwide$Timepoint, mean) -->
-<!-- tapply(labwide$NEUT, -->
-<!--   paste(labwide$ARM, labwide$Timepoint, sep="."), mean) -->
-<!-- ``` -->
+`tapply(x, groups, func)` applies a function `func` to some data `x`
+grouped by `groups`.
 
-<!-- ## Simple t.test -->
+```{r, eval=TRUE,results="markdown"}
+library(tidyverse)
+labwide <- read_csv("Datasets/labresults_wide_full.csv")[, -1 ]
+mean(labwide$NEUT)
+sd(labwide$NEUT)
+```
 
-<!-- We define logical vectors to help us select the desired data. -->
+## Descriptive statistics
 
-<!-- ```{r,eval=TRUE} -->
-<!-- fluad    <- labwide$ARM == "FLUAD" -->
-<!-- agrippal <- labwide$ARM == "AGRIPPAL" -->
+`tapply(x, groups, func)` applies a function `func` to some data `x`
+grouped by `groups`.
 
-<!-- d0 <- labwide$Timepoint == "D0" -->
-<!-- d1 <- labwide$Timepoint == "D1" -->
-<!-- ``` -->
 
-<!-- ## Simple t.test -->
+```{r, eval=TRUE,results="markdown"}
+tapply(labwide$NEUT, labwide$ARM, mean)
+tapply(labwide$NEUT, labwide$Timepoint, mean)
+tapply(labwide$NEUT,
+  paste(labwide$ARM, labwide$Timepoint, sep="."), mean)
+```
 
-<!-- Paired or not paired? -->
+## Simple t.test
 
-<!-- ```{r,eval=TRUE} -->
-<!-- tst <- "NEUT" # lymphocyte count -->
-<!-- x <- as.data.frame(labwide)[,tst] -->
-<!-- t.test(x[d0 & fluad], x[d1 & fluad]) -->
-<!-- t.test(x[d0 & fluad], x[d1 & fluad], paired=TRUE) -->
-<!-- ``` 
+We define logical vectors to help us select the desired data.
+
+```{r,eval=TRUE}
+fluad    <- labwide$ARM == "FLUAD"
+agrippal <- labwide$ARM == "AGRIPPAL"
+
+d0 <- labwide$Timepoint == "D0"
+d1 <- labwide$Timepoint == "D1"
+```
+
+## Simple t.test
+
+Paired or not paired?
+
+```{r,eval=TRUE,results="markdown"}
+x <- labwide$NEUT
+t.test(x[d0 & fluad], x[d1 & fluad])
+``` 
+
+## Simple t.test
+
+Paired or not paired?
+
+```{r,eval=TRUE,results="markdown"}
+t.test(x[d0 & fluad], x[d1 & fluad], paired=TRUE)
+``` 
+
+## Simple t.test
+
+The object returned by `t.test` is a list with the results of the test.
+
+```{r,eval=TRUE,results="markdown"}
+res <- t.test(x[d0 & fluad], x[d1 & fluad], paired=TRUE)
+res$p.value
+```
+
+We can directly insert the p-value into a text using backticks: `` `r
+format.pval(res$p.value)` ``.
+
+Result:
+
+We can directly insert the p-value into a text using backticks: `r format.pval(res$p.value)`.
+
 
 ## Broom: cleaning up data
 
@@ -214,6 +204,11 @@ tidy(t.test(x[d0 & fluad], x[d1 & fluad], paired=TRUE))
 ## Caveat: paired data
 
 We must make sure that all the data points are paired!
+
+## Exercise 5.2
+
+ * Use the iris dataset
+ * Using t-test, check whether the sepal length is different between the species
 
 ## PCA
 
@@ -235,14 +230,25 @@ pca <- prcomp(iris[,1:4], scale.=TRUE)
 df <- data.frame(pca$x, species=iris$Species)
 ggplot(df, aes(x=PC1, y=PC2, color=species)) + geom_point()
 ```
--->
+
+
+# Summary - Let's bring all concepts together
+
+## General advice
+
+ * Force yourself to use R/Rmarkdown for everything. It will pay off.
+ * If it is stupid but it works, it is not stupid.
+ * Work with real data rather than examples. If you know what you want to
+   do, the learning will be more effective.
+ * However, when trying a new package or function, first try it on the
+   examples included, then try to use it on your data.
+
 ## Summary - Let's bring all concepts together
 
 ![](images/summaryCourse.png){ width=900px }
 
 ## Where to find R packages
 
-* standing on the shoulders of giants
 * [CRAN repository](https://cran.r-project.org/)
   * packages for statistics, visualization, machine learning, ...
   * see Task Views for a collection of topics 
@@ -252,6 +258,7 @@ ggplot(df, aes(x=PC1, y=PC2, color=species)) + geom_point()
   * *flowStats*, *flowViz*, ...
   * Guides / Books for workflows, eg
   * [Cytof data](http://bioconductor.org/packages/release/workflows/html/cytofWorkflow.html)
+* GitHub: many packages are hosted on GitHub
 
 ## Where to go from here and where to find help
 
