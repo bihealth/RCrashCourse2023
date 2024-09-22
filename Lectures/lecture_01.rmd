@@ -185,7 +185,7 @@ Note: play with the computer, try out things
   * add vector `c(1, 2, 5)` and vector `c(10, 20, 30)`. What happens?
   * type `length(teacher)`; type `length(teachers)`; what are the results?
   * type `pi`. What happens?
-  * say, you have thre values which are the diameters of three circles: 1,
+  * say, you have three values which are the diameters of three circles: 1,
     5 and 13. You would like to have a vector containing the areas of these
     circles. What is the simplest way of doing that?
 
@@ -338,8 +338,8 @@ samples_sd <- sd(samples)
 
 **Demo**
 
- * `https://youtu.be/rnGADz4cuBA`
- * `https://youtu.be/NTnLZQwKhvA`
+ * `https://youtu.be/rnGADz4cuBA` (Functions, 6 minutes)
+ * `https://youtu.be/NTnLZQwKhvA` (defining functions, 7 minutes)
 
 ## Exercise 1.4 More on vectors (and functions)
 

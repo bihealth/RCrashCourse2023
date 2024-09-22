@@ -94,7 +94,7 @@ Interactive tables:
 library(DT)
 
 # generate table (idiom):
-datatable(iris[ 1:10, ], options = list(pageLength = 5))
+datatable(iris, options = list(pageLength = 5))
 ```
 
 ## Exercise 5.1
@@ -242,6 +242,8 @@ ggplot(df, aes(x=PC1, y=PC2, color=species)) + geom_point()
    do, the learning will be more effective.
  * However, when trying a new package or function, first try it on the
    examples included, then try to use it on your data.
+ * Always create a project directory
+ * use sessionInfo() to document the environment
 
 ## Summary - Let's bring all concepts together
 
